@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "92A3FB14FB5090ADAA5371EE1CBCF19A050C114E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "92A3FB14FB5090ADAA5371EE1CBCF19A050C114E" : 9223372036854775807,
+    "8A16B1087EB112CAA7916CED48E6A5B0A88FE2F0" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5F755054-ED7E-4194-9AE0-250C321B2EEF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "92A3FB14FB5090ADAA5371EE1CBCF19A050C114E" : "ChaosMath\/",
+    "8A16B1087EB112CAA7916CED48E6A5B0A88FE2F0" : "ChaosCore\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ChaosMath",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ChaosMath.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/chaosarts\/ChaosCore.swift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8A16B1087EB112CAA7916CED48E6A5B0A88FE2F0"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/chaosarts\/ChaosMath.swift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "92A3FB14FB5090ADAA5371EE1CBCF19A050C114E"
+    }
+  ]
+}
