@@ -24,7 +24,6 @@ public protocol ArithmeticType : ExpressibleByIntegerLiteral, Comparable, Custom
 
 
 public protocol ArithmeticFloatType : ArithmeticType, ExpressibleByFloatLiteral {
-    
 }
 
 extension Int : ArithmeticType {}

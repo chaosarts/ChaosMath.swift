@@ -243,6 +243,19 @@ public func dot<T: ArithmeticType> (_ left: tvec3<T>, _ right: tvec3<T>) -> T {
 }
 
 
+/// Returns the (left hand oriented) normal of the given vectors
+/// - parameter left: The left operand (thumb)
+/// - parameter right: The right operand (pointer)
+/// - returns: The normal vector (middlefinger) which is othogonal to left and right
+public func cross<T: ArithmeticType> (_ left: tvec3<T>, _ right: tvec3<T>) -> tvec3<T>  {
+    return tvec3<T>(
+        left.y * right.z - left.z * right.y,
+        left.z * right.x - left.x * right.z,
+        left.x * right.y - left.y * right.x
+    )
+}
+
+
 /// Calculates the determinant of three given vectors
 /// - parameter x:
 /// - parameter y:
@@ -300,32 +313,6 @@ public func normalize (_ value: vec3f) -> vec3f {
 /// - returns: The normalized vector
 public func normalize (_ value: vec3d) -> vec3d {
 	return value / magnitude(value)
-}
-
-
-/// Returns the (left hand oriented) normal of the given vectors
-/// - parameter left: The left operand (thumb)
-/// - parameter right: The right operand (pointer)
-/// - returns: The normal vector (middlefinger) which is othogonal to left and right 
-public func cross (_ left: vec3f, _ right: vec3f) -> vec3f  {
-	return vec3f(
-		left.y * right.z - left.z * right.y, 
-		left.z * right.x - left.x * right.z, 
-		left.x * right.y - left.y * right.x 
-	)
-}
-
-
-/// Returns the (left hand oriented) normal of the given vectors
-/// - parameter left: The left operand (thumb)
-/// - parameter right: The right operand (pointer)
-/// - returns: The normal vector (middlefinger) which is othogonal to left and right 
-public func cross (_ left: vec3d, _ right: vec3d) -> vec3d  {
-	return vec3d(
-		left.y * right.z - left.z * right.y, 
-		left.z * right.x - left.x * right.z, 
-		left.x * right.y - left.y * right.x 
-	)
 }
 
 

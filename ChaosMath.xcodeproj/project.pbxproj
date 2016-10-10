@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C40584BA1DABE54700E18D74 /* ChaosCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B8F8461DABC9DB00B678E8 /* ChaosCore.framework */; };
 		C4271F1A1DA91EB600D7410C /* mat3.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4271F191DA91EB600D7410C /* mat3.swift */; };
 		C4271F1C1DAA76D100D7410C /* mat4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4271F1B1DAA76D100D7410C /* mat4.swift */; };
 		C4271F1E1DAAA08400D7410C /* basis2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4271F1D1DAAA08400D7410C /* basis2.swift */; };
@@ -32,6 +33,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C40584B61DABE54100E18D74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C4B8F8401DABC9DB00B678E8 /* ChaosCore.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C46287E31DA7ED6A00920666;
+			remoteInfo = ChaosCore;
+		};
 		C46288371DA7EE5400920666 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C46288231DA7EE5400920666 /* Project object */;
@@ -89,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C40584BA1DABE54700E18D74 /* ChaosCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +203,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C40584B71DABE54100E18D74 /* PBXTargetDependency */,
 			);
 			name = ChaosMath;
 			productName = ChaosMath;
@@ -335,6 +345,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C40584B71DABE54100E18D74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ChaosCore;
+			targetProxy = C40584B61DABE54100E18D74 /* PBXContainerItemProxy */;
+		};
 		C46288381DA7EE5400920666 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C462882B1DA7EE5400920666 /* ChaosMath */;
@@ -453,6 +468,7 @@
 				INFOPLIST_FILE = ChaosMath/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.ChaosMath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -475,6 +491,7 @@
 				INFOPLIST_FILE = ChaosMath/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.ChaosMath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
