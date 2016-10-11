@@ -32,200 +32,6 @@ public struct tmat3<T: ArithmeticType> : MatrixType {
     /// Provides the identity matrix
     public static var identity : SelfType {get {return SelfType(1)}}
     
-    /*
-    +--------------------------------------------------------------------------
-    | Operators
-    +--------------------------------------------------------------------------
-    */
-    
-    /// Negates the given matrix
-    /// - parameter mat: The matrix to negate
-    /// - returns: The negated matrix
-    public static prefix func - (mat: SelfType) -> SelfType {
-        return SelfType(-mat.array[0], -mat.array[1], -mat.array[2],
-            -mat.array[3], -mat.array[4], -mat.array[5],
-            -mat.array[6], -mat.array[7], -mat.array[8]) 
-    }
-    
-    
-    /// Calculates the component wise sum of two matrices
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    /// - returns: The sum of the matrices
-    public static func + (left: SelfType, right: SelfType) -> SelfType {
-        return SelfType(
-            left.array[0] + right.array[0], left.array[1] + right.array[1], left.array[2] + right.array[2],
-            left.array[3] + right.array[3], left.array[4] + right.array[4], left.array[5] + right.array[5],
-            left.array[6] + right.array[6], left.array[7] + right.array[7], left.array[8] + right.array[8]
-        )
-    }
-    
-    
-    /// Calcuates the component wise difference between two matrices
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    /// - returns: The difference of the matrices
-    public static func - (left: SelfType, right: SelfType) -> SelfType {
-        return left - right
-    }
-    
-    
-    /// Calculates the product of two matrices
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    /// - returns: The product of the matrices
-    public static func * (left: SelfType, right: SelfType) -> SelfType {
-        let a11 : ElementType = left.array[0] * right.array[0] + left.array[3] * right.array[1] + left.array[6] * right.array[2]
-        let a21 : ElementType = left.array[1] * right.array[0] + left.array[4] * right.array[1] + left.array[7] * right.array[2]
-        let a31 : ElementType = left.array[2] * right.array[0] + left.array[5] * right.array[1] + left.array[8] * right.array[2]
-
-        let a12 : ElementType = left.array[0] * right.array[3] + left.array[3] * right.array[4] + left.array[6] * right.array[5]
-        let a22 : ElementType = left.array[1] * right.array[3] + left.array[4] * right.array[4] + left.array[7] * right.array[5]
-        let a32 : ElementType = left.array[2] * right.array[3] + left.array[5] * right.array[4] + left.array[8] * right.array[5]
-
-        let a13 : ElementType = left.array[0] * right.array[6] + left.array[3] * right.array[7] + left.array[6] * right.array[8]
-        let a23 : ElementType = left.array[1] * right.array[6] + left.array[4] * right.array[7] + left.array[7] * right.array[8]
-        let a33 : ElementType = left.array[2] * right.array[6] + left.array[5] * right.array[7] + left.array[8] * right.array[8]
-
-        return SelfType(a11, a12, a13, a21, a22, a23, a31, a32, a33)
-    }
-    
-    
-    /// Calculates the right side multiplication
-    /// - parameter mat:
-    /// - parameter vec:
-    /// - returns: The resulting vector of the multiplication
-    public static func * (vec: VectorType, mat: SelfType) -> VectorType {
-        var x : ElementType = 0, y : ElementType = 0, z : ElementType = 0
-        x += vec.x * mat.array[0]
-        x += vec.y * mat.array[1]
-		x += vec.z * mat.array[2]
-        
-        y += vec.x * mat.array[3]
-        y += vec.y * mat.array[4]
-        y += vec.z * mat.array[5]
-        
-        z += vec.x * mat.array[6]
-        z += vec.y * mat.array[7]
-        z += vec.z * mat.array[8]
-
-        return VectorType(x, y, z)
-    }
-
-    /// Calculates the left side multiplication
-    /// - parameter mat:
-    /// - parameter vec:
-    /// - returns: The resulting vector of the multiplication
-    public static func * (mat: SelfType, vec: VectorType) -> VectorType {
-        var x : ElementType = 0, y : ElementType = 0, z : ElementType = 0
-        
-        x += vec.x * mat.array[0]
-        x += vec.y * mat.array[3]
-        x += vec.z * mat.array[6]
-        
-        y += vec.x * mat.array[1]
-        y += vec.y * mat.array[4]
-        y += vec.z * mat.array[7]
-        
-        z += vec.x * mat.array[2]
-        z += vec.y * mat.array[5]
-        z += vec.z * mat.array[8]
-
-        return VectorType(x, y, z)
-    }
-    
-    
-    /// Calculates the product of a scalar and a matrix
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    /// - returns: The product of the matrix and scalar
-    public static func * (left: ElementType, right: SelfType) -> SelfType {
-        let a11 : ElementType = left * right.array[0]
-        let a21 : ElementType = left * right.array[1]
-        let a31 : ElementType = left * right.array[2]
-
-        let a12 : ElementType = left * right.array[3]
-        let a22 : ElementType = left * right.array[4]
-        let a32 : ElementType = left * right.array[5]
-
-        let a13 : ElementType = left * right.array[6]
-        let a23 : ElementType = left * right.array[7]
-        let a33 : ElementType = left * right.array[8]
-
-        return SelfType(a11, a12, a13, a21, a22, a23, a31, a32, a33)
-    }
-    
-    
-    /// Calculates the product of a scalar and a matrix
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    /// - returns: The product of the matrix and scalar
-    public static func * (left: SelfType, right: ElementType) -> SelfType {
-        return right * left
-    }
-    
-    
-    /// Devides the matrix by the given scalar
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    /// - returns: The product of the matrix and scalar
-    public static func / (left: SelfType, right: ElementType) -> SelfType {
-        let one : ElementType = 1
-        return left * (one / right)
-    }
-    
-    
-    /// Compund operator for addition
-    /// - parameter left: The left operand
-    /// - parameter rught: The right operand
-    public static func += (left: inout SelfType, right: SelfType) {
-        left = left + right
-    }
-    
-    
-    /// Compund operator for addition
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    public static func -= (left: inout SelfType, right: SelfType) {
-        left = left - right
-    }
-    
-    
-    /// Compund operator for addition
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    public static func *= (left: inout SelfType, right: SelfType) {
-        left = left * right
-    }
-    
-    
-    /// Compund operator for addition
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    public static func *= (left: inout SelfType, right: ElementType) {
-        left = left * right
-    }
-    
-    
-    /// Compund operator for addition
-    /// - parameter left: The left operand
-    /// - parameter right: The right operand
-    public static func /= (left: inout SelfType, right: ElementType) {
-        left = left / right
-    }
-    
-    
-    /// Compares to matrices
-    public static func == (left: SelfType, right: SelfType) -> Bool {
-        for i in 0..<left.array.count {
-            if left.array[i] != right.array[i] {
-                return false
-            }
-        }
-        
-        return true
-    }
-    
     
     /*
     +--------------------------------------------------------------------------
@@ -429,10 +235,226 @@ public struct tmat3<T: ArithmeticType> : MatrixType {
 }
 
 
+extension tmat3 where T: ArithmeticFloatType {
+    public init<S: ArithmeticIntType> (_ mat: tmat3<S>) {
+        self.init(
+            T(mat.array[0]), T(mat.array[1]), T(mat.array[2]),
+            T(mat.array[3]), T(mat.array[4]), T(mat.array[5]),
+            T(mat.array[6]), T(mat.array[7]), T(mat.array[8])
+        )
+    }
+}
+
+
 public typealias mat3i = tmat3<Int>
 public typealias mat3f = tmat3<Float>
 public typealias mat3d = tmat3<Double>
 public typealias mat3 = mat3f
+
+
+/*
+ +--------------------------------------------------------------------------
+ | Operators
+ +--------------------------------------------------------------------------
+ */
+
+/// Negates the given matrix
+/// - parameter mat: The matrix to negate
+/// - returns: The negated matrix
+public prefix func -<T: ArithmeticType> (mat: tmat3<T>) -> tmat3<T> {
+    return tmat3<T>(-mat.array[0], -mat.array[1], -mat.array[2],
+                    -mat.array[3], -mat.array[4], -mat.array[5],
+                    -mat.array[6], -mat.array[7], -mat.array[8])
+}
+
+
+/// Calculates the component wise sum of two matrices
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+/// - returns: The sum of the matrices
+public func +<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
+    return tmat3<T>(
+        left.array[0] + right.array[0], left.array[1] + right.array[1], left.array[2] + right.array[2],
+        left.array[3] + right.array[3], left.array[4] + right.array[4], left.array[5] + right.array[5],
+        left.array[6] + right.array[6], left.array[7] + right.array[7], left.array[8] + right.array[8]
+    )
+}
+
+
+/// Calcuates the component wise difference between two matrices
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+/// - returns: The difference of the matrices
+public func -<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
+    return left - right
+}
+
+
+/// Calculates the product of two matrices
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+/// - returns: The product of the matrices
+public func *<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
+    let a11 : T = left.array[0] * right.array[0] + left.array[3] * right.array[1] + left.array[6] * right.array[2]
+    let a21 : T = left.array[1] * right.array[0] + left.array[4] * right.array[1] + left.array[7] * right.array[2]
+    let a31 : T = left.array[2] * right.array[0] + left.array[5] * right.array[1] + left.array[8] * right.array[2]
+    
+    let a12 : T = left.array[0] * right.array[3] + left.array[3] * right.array[4] + left.array[6] * right.array[5]
+    let a22 : T = left.array[1] * right.array[3] + left.array[4] * right.array[4] + left.array[7] * right.array[5]
+    let a32 : T = left.array[2] * right.array[3] + left.array[5] * right.array[4] + left.array[8] * right.array[5]
+    
+    let a13 : T = left.array[0] * right.array[6] + left.array[3] * right.array[7] + left.array[6] * right.array[8]
+    let a23 : T = left.array[1] * right.array[6] + left.array[4] * right.array[7] + left.array[7] * right.array[8]
+    let a33 : T = left.array[2] * right.array[6] + left.array[5] * right.array[7] + left.array[8] * right.array[8]
+    
+    return tmat3<T>(a11, a12, a13, a21, a22, a23, a31, a32, a33)
+}
+
+
+/// Calculates the right side multiplication
+/// - parameter mat:
+/// - parameter vec:
+/// - returns: The resulting vector of the multiplication
+public func *<T: ArithmeticType> (vec: tvec3<T>, mat: tmat3<T>) -> tvec3<T> {
+    var x : T = 0, y : T = 0, z : T = 0
+    x += vec.x * mat.array[0]
+    x += vec.y * mat.array[1]
+    x += vec.z * mat.array[2]
+    
+    y += vec.x * mat.array[3]
+    y += vec.y * mat.array[4]
+    y += vec.z * mat.array[5]
+    
+    z += vec.x * mat.array[6]
+    z += vec.y * mat.array[7]
+    z += vec.z * mat.array[8]
+    
+    return tvec3<T>(x, y, z)
+}
+
+/// Calculates the left side multiplication
+/// - parameter mat:
+/// - parameter vec:
+/// - returns: The resulting vector of the multiplication
+public func *<T: ArithmeticType> (mat: tmat3<T>, vec: tvec3<T>) -> tvec3<T> {
+    var x : T = 0, y : T = 0, z : T = 0
+    
+    x += vec.x * mat.array[0]
+    x += vec.y * mat.array[3]
+    x += vec.z * mat.array[6]
+    
+    y += vec.x * mat.array[1]
+    y += vec.y * mat.array[4]
+    y += vec.z * mat.array[7]
+    
+    z += vec.x * mat.array[2]
+    z += vec.y * mat.array[5]
+    z += vec.z * mat.array[8]
+    
+    return tvec3<T>(x, y, z)
+}
+
+
+/// Calculates the product of a scalar and a matrix
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+/// - returns: The product of the matrix and scalar
+public func *<T: ArithmeticType> (left: T, right: tmat3<T>) -> tmat3<T> {
+    let a11 : T = left * right.array[0]
+    let a21 : T = left * right.array[1]
+    let a31 : T = left * right.array[2]
+    
+    let a12 : T = left * right.array[3]
+    let a22 : T = left * right.array[4]
+    let a32 : T = left * right.array[5]
+    
+    let a13 : T = left * right.array[6]
+    let a23 : T = left * right.array[7]
+    let a33 : T = left * right.array[8]
+    
+    return tmat3<T>(a11, a12, a13, a21, a22, a23, a31, a32, a33)
+}
+
+
+/// Calculates the product of a scalar and a matrix
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+/// - returns: The product of the matrix and scalar
+public func *<T: ArithmeticType> (left: tmat3<T>, right: T) -> tmat3<T> {
+    return right * left
+}
+
+
+/// Devides the matrix by the given scalar
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+/// - returns: The product of the matrix and scalar
+public func /<T: ArithmeticType> (left: tmat3<T>, right: T) -> tmat3<T> {
+    return tmat3<T>(
+        left.array[0] / right, left.array[1] / right, left.array[2] / right,
+        left.array[3] / right, left.array[4] / right, left.array[5] / right,
+        left.array[6] / right, left.array[7] / right, left.array[8] / right
+    )
+}
+
+
+/// Compund operator for addition
+/// - parameter left: The left operand
+/// - parameter rught: The right operand
+public func +=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
+    left = left + right
+}
+
+
+/// Compund operator for addition
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+public func -=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
+    left = left - right
+}
+
+
+/// Compund operator for addition
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+public func *=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
+    left = left * right
+}
+
+
+/// Compund operator for addition
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+public func *=<T: ArithmeticType> (left: inout tmat3<T>, right: T) {
+    left = left * right
+}
+
+
+/// Compund operator for addition
+/// - parameter left: The left operand
+/// - parameter right: The right operand
+public func /=<T: ArithmeticType> (left: inout tmat3<T>, right: T) {
+    left = left / right
+}
+
+
+/// Compares to matrices
+public func ==<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> Bool {
+    for i in 0..<left.array.count {
+        if left.array[i] != right.array[i] {
+            return false
+        }
+    }
+    
+    return true
+}
+
+
+/*
+ +--------------------------------------------------------------------------
+ | Functions
+ +--------------------------------------------------------------------------
+ */
 
 /// Transposes the matrix
 /// - parameter mat: The matrix to transpose

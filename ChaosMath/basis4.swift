@@ -117,38 +117,46 @@ public struct tbasis4<T: ArithmeticType>: Equatable {
 }
 
 
+extension tbasis4 where T: ArithmeticFloatType {
+    public init<S: ArithmeticIntType> (_ b: tbasis4<S>) {
+        self.x = VectorType(b.x)
+        self.y = VectorType(b.y)
+        self.z = VectorType(b.z)
+        self.w = VectorType(b.w)
+    }
+}
+
+
 public typealias basis4i = tbasis4<Int>
 public typealias basis4f = tbasis4<Float>
 public typealias basis4d = tbasis4<Double>
 public typealias basis4 = basis4f
 
-/// Returns the transformation matrix from one basis to another
-/// - parameter from: The basis to transform from
-/// - parameter to: The basis to transform to
-/// - returns: The transformation matrix
-public func transformation (_ from: basis4i, _ to: basis4i) -> mat4f {
-    do {
-        let invertedMat : mat4f = try invert(to.mat)
-        let floatMat : mat4f = mat4f(
-            Float(from.x.x), Float(from.x.y), Float(from.x.z), Float(from.x.w),
-            Float(from.y.x), Float(from.y.y), Float(from.y.z), Float(from.y.w),
-            Float(from.z.x), Float(from.z.y), Float(from.z.z), Float(from.z.w),
-            Float(from.w.x), Float(from.w.y), Float(from.w.z), Float(from.w.w)
-        )
-        return invertedMat * floatMat
-    } catch {
-        // Won't be reached anyway. Matrix of basis are ensured to be invertible
-        return mat4f()
-    }
-}
-
-
-public func transformation<T: ArithmeticType> (_ from: tbasis4<T>, _ to: tbasis4<T>) -> tmat4<T> {
-    do {
-        let inverseTo : tmat4<T> = try invert(to.mat)
-        return inverseTo * from.mat
-    }
-    catch {
-        return tmat4<T>()
-    }
-}
+///// Returns the transformation matrix from one basis to another
+///// - parameter from: The basis to transform from
+///// - parameter to: The basis to transform to
+///// - returns: The transformation matrix
+//public func transformation<T: ArithmeticFloatType> (_ from: tbasis4<T>, _ to: tbasis4<T>) -> tmat4<T> {
+//    do {
+//        let inverseTo : tmat4<T> = try invert(to.mat)
+//        return inverseTo * from.mat
+//    }
+//    catch {
+//        return tmat4<T>()
+//    }
+//}
+//
+//
+///// Returns the transformation matrix from one basis to another
+///// - parameter from: The basis to transform from
+///// - parameter to: The basis to transform to
+///// - returns: The transformation matrix
+//public func transformation<T: ArithmeticIntType> (_ from: tbasis4<T>, _ to: tbasis4<T>) -> tmat4<Float> {
+//    do {
+//        let inverseTo : tmat4<Float> = try invert(to.mat)
+//        return inverseTo * basis4f(from).mat
+//    }
+//    catch {
+//        return tmat4<Float>()
+//    }
+//}

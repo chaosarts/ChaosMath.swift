@@ -29,6 +29,12 @@
 		C46288511DA8049600920666 /* func.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46288501DA8049600920666 /* func.swift */; };
 		C46288531DA809F100920666 /* vec4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46288521DA809F100920666 /* vec4.swift */; };
 		C46288551DA80AB700920666 /* mat2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46288541DA80AB700920666 /* mat2.swift */; };
+		C48C25321DAD146D00941123 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C25311DAD146D00941123 /* Float.swift */; };
+		C48C25351DAD149C00941123 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C25341DAD149C00941123 /* Double.swift */; };
+		C48C25381DAD14C300941123 /* Int32.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C25371DAD14C300941123 /* Int32.swift */; };
+		C48C253A1DAD192400941123 /* Int16.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C25391DAD192400941123 /* Int16.swift */; };
+		C48C253D1DAD412800941123 /* Int64.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C253C1DAD412800941123 /* Int64.swift */; };
+		C48C253F1DAD41A800941123 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C253E1DAD41A800941123 /* Int.swift */; };
 		C4B8F83F1DABC2B600B678E8 /* quaternion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8F83E1DABC2B600B678E8 /* quaternion.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +94,12 @@
 		C46288501DA8049600920666 /* func.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = func.swift; sourceTree = "<group>"; };
 		C46288521DA809F100920666 /* vec4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec4.swift; sourceTree = "<group>"; };
 		C46288541DA80AB700920666 /* mat2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mat2.swift; sourceTree = "<group>"; };
+		C48C25311DAD146D00941123 /* Float.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float.swift; sourceTree = "<group>"; };
+		C48C25341DAD149C00941123 /* Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		C48C25371DAD14C300941123 /* Int32.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int32.swift; sourceTree = "<group>"; };
+		C48C25391DAD192400941123 /* Int16.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int16.swift; sourceTree = "<group>"; };
+		C48C253C1DAD412800941123 /* Int64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int64.swift; sourceTree = "<group>"; };
+		C48C253E1DAD41A800941123 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		C4B8F83E1DABC2B600B678E8 /* quaternion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = quaternion.swift; sourceTree = "<group>"; };
 		C4B8F8401DABC9DB00B678E8 /* ChaosCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChaosCore.xcodeproj; path = ../ChaosCore/ChaosCore.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -136,7 +148,6 @@
 			children = (
 				C462882F1DA7EE5400920666 /* ChaosMath.h */,
 				C46288301DA7EE5400920666 /* Info.plist */,
-				C462884C1DA7F48300920666 /* ArithmeticType.swift */,
 				C4271F1F1DAAA86C00D7410C /* basis.swift */,
 				C4271F1D1DAAA08400D7410C /* basis2.swift */,
 				C4271F2D1DABB10900D7410C /* basis3.swift */,
@@ -152,6 +163,8 @@
 				C46288461DA7EE6600920666 /* vec2.swift */,
 				C462884E1DA8019200920666 /* vec3.swift */,
 				C46288521DA809F100920666 /* vec4.swift */,
+				C48C25361DAD14AC00941123 /* Extension */,
+				C48C253B1DAD410200941123 /* Protocol */,
 			);
 			path = ChaosMath;
 			sourceTree = "<group>";
@@ -166,6 +179,27 @@
 				C4271F2B1DABADC500D7410C /* ChaosMat2Test.swift */,
 			);
 			path = ChaosMathTests;
+			sourceTree = "<group>";
+		};
+		C48C25361DAD14AC00941123 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				C48C25341DAD149C00941123 /* Double.swift */,
+				C48C25311DAD146D00941123 /* Float.swift */,
+				C48C253E1DAD41A800941123 /* Int.swift */,
+				C48C25391DAD192400941123 /* Int16.swift */,
+				C48C25371DAD14C300941123 /* Int32.swift */,
+				C48C253C1DAD412800941123 /* Int64.swift */,
+			);
+			name = Extension;
+			sourceTree = "<group>";
+		};
+		C48C253B1DAD410200941123 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				C462884C1DA7F48300920666 /* ArithmeticType.swift */,
+			);
+			name = Protocol;
 			sourceTree = "<group>";
 		};
 		C4B8F8411DABC9DB00B678E8 /* Products */ = {
@@ -314,19 +348,25 @@
 			files = (
 				C4271F321DABB5D400D7410C /* complex.swift in Sources */,
 				C4B8F83F1DABC2B600B678E8 /* quaternion.swift in Sources */,
+				C48C253D1DAD412800941123 /* Int64.swift in Sources */,
+				C48C25381DAD14C300941123 /* Int32.swift in Sources */,
 				C46288471DA7EE6600920666 /* vec2.swift in Sources */,
 				C4271F301DABB40100D7410C /* basis4.swift in Sources */,
 				C46288551DA80AB700920666 /* mat2.swift in Sources */,
+				C48C253F1DAD41A800941123 /* Int.swift in Sources */,
 				C4271F1E1DAAA08400D7410C /* basis2.swift in Sources */,
 				C46288511DA8049600920666 /* func.swift in Sources */,
+				C48C253A1DAD192400941123 /* Int16.swift in Sources */,
 				C4271F1C1DAA76D100D7410C /* mat4.swift in Sources */,
 				C462884F1DA8019200920666 /* vec3.swift in Sources */,
 				C4271F1A1DA91EB600D7410C /* mat3.swift in Sources */,
 				C462884D1DA7F48300920666 /* ArithmeticType.swift in Sources */,
+				C48C25321DAD146D00941123 /* Float.swift in Sources */,
 				C4271F221DAABF6A00D7410C /* mat.swift in Sources */,
 				C4271F201DAAA86C00D7410C /* basis.swift in Sources */,
 				C4271F241DAABF7100D7410C /* vec.swift in Sources */,
 				C46288531DA809F100920666 /* vec4.swift in Sources */,
+				C48C25351DAD149C00941123 /* Double.swift in Sources */,
 				C4271F2E1DABB10900D7410C /* basis3.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

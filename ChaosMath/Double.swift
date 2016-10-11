@@ -1,0 +1,111 @@
+//
+//  Double.swift
+//  ChaosMath
+//
+//  Created by Fu Lam Diep on 11/10/2016.
+//  Copyright © 2016 Fu Lam Diep. All rights reserved.
+//
+
+import Foundation
+
+extension Double : ArithmeticFloatType {
+    
+    public init<T: ArithmeticIntType> (_ value: T) {
+        self.init(value.toFloat())
+    }
+    
+    
+    public func toFloat() -> Float {
+        return Float(self)
+    }
+    
+    
+    public func sin () -> Double {
+        return Darwin.sin(self)
+    }
+    
+    
+    public func asin () -> Double {
+        return Darwin.asin(self)
+    }
+    
+    
+    public func cos () -> Double {
+        return Darwin.cos(self)
+    }
+    
+    
+    public func acos () -> Double {
+        return Darwin.acos(self)
+    }
+    
+    
+    public func tan () -> Double {
+        return Darwin.tan(self)
+    }
+    
+    
+    public func atan () -> Double {
+        return Darwin.atan(self)
+    }
+}
+
+
+public func +<T: ArithmeticIntType> (_ left: Double, _ right: T) -> Double {
+    return left + Double(right.toFloat())
+}
+
+
+public func +<T: ArithmeticIntType> (_ left: T, _ right: Double) -> Double {
+    return right + left
+}
+
+
+public func -<T: ArithmeticIntType> (_ left: Double, _ right: T) -> Double {
+    return left - Double(right.toFloat())
+}
+
+
+public func -<T: ArithmeticIntType> (_ left: T, _ right: Double) -> Double {
+    return -right + left
+}
+
+
+public func *<T: ArithmeticIntType> (_ left: Double, _ right: T) -> Double {
+    return left * Double(right.toFloat())
+}
+
+
+public func *<T: ArithmeticIntType> (_ left: T, _ right: Double) -> Double {
+    return right * left
+}
+
+
+public func /<T: ArithmeticIntType> (_ left: Double, _ right: T) -> Double {
+    return left / Double(right.toFloat())
+}
+
+
+public func /<T: ArithmeticIntType> (_ left: T, _ right: Double) -> Double {
+    return Double(left.toFloat()) / right
+}
+
+
+public func +=<T: ArithmeticIntType> (_ left: inout Double, _ right: T) {
+    left = left + right
+}
+
+
+public func -=<T: ArithmeticIntType> (_ left: inout Double, _ right: T) {
+    left = left - right
+}
+
+
+public func *=<T: ArithmeticIntType> (_ left: inout Double, _ right: T) {
+    left = left * right
+}
+
+
+public func /=<T: ArithmeticIntType> (_ left: inout Double, _ right: T) {
+    left = left / right
+}

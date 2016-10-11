@@ -103,6 +103,14 @@ public struct tbasis2<T: ArithmeticType>: Equatable {
 }
 
 
+extension tbasis2 where T: ArithmeticFloatType {
+    public init<S: ArithmeticIntType> (_ b: tbasis2<S>) {
+        self.x = VectorType(b.x)
+        self.y = VectorType(b.y)
+    }
+}
+
+
 public typealias basis2i = tbasis2<Int>
 public typealias basis2f = tbasis2<Float>
 public typealias basis2d = tbasis2<Double>
@@ -113,22 +121,30 @@ public typealias basis2 = basis2f
 /// - parameter from: The basis to transform from
 /// - parameter to: The basis to transform to
 /// - returns: The transformation matrix
-public func transformation (_ from: basis2i, _ to: basis2i) -> mat2f {
+public func transformation<T: ArithmeticFloatType> (_ from: tbasis2<T>, _ to: tbasis2<T>) -> tmat2<T> {
+    do {
+        let inverseTo : tmat2<T> = try invert(to.mat)
+        return inverseTo * from.mat
+    }
+    catch {
+        // Won't be reached anyway. Matrix of basis are ensured to be invertible
+        return tmat2<T>()
+    }
+}
+
+
+/// Returns the transformation matrix from one basis to another
+/// - parameter from: The basis to transform from
+/// - parameter to: The basis to transform to
+/// - returns: The transformation matrix
+public func transformation<T: ArithmeticIntType> (_ from: tbasis2<T>, _ to: tbasis2<T>) -> mat2f {
     do {
         let invertedMat : mat2f = try invert(to.mat)
-        return invertedMat * mat2f(Float(from.x.x), Float(from.x.y), Float(from.y.x), Float(from.y.y))
+        return invertedMat * mat2f(from.mat)
     } catch {
         // Won't be reached anyway. Matrix of basis are ensured to be invertible
      	return mat2f()
     }
 }
 
-public func transformation<T: ArithmeticType> (_ from: tbasis2<T>, _ to: tbasis2<T>) -> tmat2<T> {
-    do {
-        let inverseTo : tmat2<T> = try invert(to.mat)
-        return inverseTo * from.mat
-    }
-    catch {
-        return tmat2<T>()
-    }
-}
+

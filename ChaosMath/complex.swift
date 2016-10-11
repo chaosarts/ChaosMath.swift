@@ -186,32 +186,32 @@ public struct tcomplex<T: ArithmeticType> : ExpressibleByArrayLiteral, Equatable
     }
 }
 
+
+extension tcomplex where T: ArithmeticFloatType {
+    public init<S: ArithmeticIntType> (_ c: tcomplex<S>) {
+        self.init(T(c.r), T(c.i))
+    }
+}
+
 public typealias complexi = tcomplex<Int>
 public typealias complexf = tcomplex<Float>
 public typealias complexd = tcomplex<Double>
 public typealias complex = complexf
 
 
-/// Calculates the magnitude of a complex number
-public func magnitude (_ c: complexi) -> Float {
-    let r : Float = Float(c.r)
-    let i : Float = Float(c.i)
-    return sqrt(r * r + i * i)
-}
-
-
-/// Calculates the magnitude of a complex number
-public func magnitude (_ c: complexf) -> Float {
-    return sqrt(c.r * c.r + c.i * c.i)
-}
-
-
-/// Calculates the magnitude of a complex number
-public func magnitude (_ c: complexd) -> Double {
-    return sqrt(c.r * c.r + c.i * c.i)
-}
-
 /// Returns the conjugate of the complex number
 public func conjugate<T: ArithmeticType> (_ c: tcomplex<T>) -> tcomplex<T> {
     return tcomplex<T>(c.r, -c.i)
+}
+
+
+/// Calculates the magnitude of a complex number
+public func magnitude<T: ArithmeticIntType> (_ c: tcomplex<T>) -> Float {
+    return (c.r * c.r + c.i * c.i).squareRoot()
+}
+
+
+/// Calculates the magnitude of a complex number
+public func magnitude<T: ArithmeticFloatType> (_ c: tcomplex<T>) -> T {
+    return (c.r * c.r + c.i * c.i).squareRoot()
 }

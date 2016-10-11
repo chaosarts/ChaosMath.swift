@@ -9,8 +9,9 @@
 import Foundation
 
 
-public protocol ArithmeticType : ExpressibleByIntegerLiteral, Comparable, CustomStringConvertible
+public protocol ArithmeticType : SignedNumber, ExpressibleByIntegerLiteral, Comparable, CustomStringConvertible
 {
+    func toFloat () -> Float
 	static prefix func - (value: Self) -> Self;
 	static func + (left: Self, right: Self) -> Self
 	static func - (left: Self, right: Self) -> Self
@@ -23,9 +24,23 @@ public protocol ArithmeticType : ExpressibleByIntegerLiteral, Comparable, Custom
 }
 
 
-public protocol ArithmeticFloatType : ArithmeticType, ExpressibleByFloatLiteral {
+public protocol ArithmeticIntType : ArithmeticType {
+    func squareRoot () -> Float
+    func sin () -> Float
+    func asin () -> Float
+    func cos() -> Float
+    func acos() -> Float
+    func tan () -> Float
+    func atan () -> Float
 }
 
-extension Int : ArithmeticType {}
-extension Float : ArithmeticFloatType {}
-extension Double : ArithmeticFloatType {}
+
+public protocol ArithmeticFloatType : BinaryFloatingPoint, ExpressibleByFloatLiteral, ArithmeticType {
+    init<T: ArithmeticIntType> (_ value: T)
+    func sin () -> Self
+    func asin () -> Self
+    func cos() -> Self
+    func acos() -> Self
+    func tan () -> Self
+    func atan () -> Self
+}

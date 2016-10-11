@@ -193,6 +193,13 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     }
 }
 
+
+extension tquaternion where T: ArithmeticFloatType {
+    public init<S: ArithmeticIntType> (_ q: tquaternion<S>) {
+        self.init(T(q.r), tvec3<T>(q.v))
+    }
+}
+
 public typealias quaternioni = tquaternion<Int>
 public typealias quaternionf = tquaternion<Float>
 public typealias quaterniond = tquaternion<Double>
@@ -236,40 +243,32 @@ public func norm<T: ArithmeticType> (_ q: tquaternion<T>) -> T {
 /// Returns the magnitude of the quaternion
 /// - parameter q: The quaternion to calculate the magnitude of
 /// - returns: The magnitude of the quaternion
-public func magnitude (_ q: quaternioni) -> Float {
-    return sqrt(Float(dot(q, q)))
+public func magnitude<T: ArithmeticIntType> (_ q: tquaternion<T>) -> Float {
+    return dot(q, q).squareRoot()
 }
 
 
 /// Returns the magnitude of the quaternion
 /// - parameter q: The quaternion to calculate the magnitude of
 /// - returns: The magnitude of the quaternion
-public func magnitude (_ q: quaternionf) -> Float {
-    return sqrt(dot(q, q))
-}
-
-
-/// Returns the magnitude of the quaternion
-/// - parameter q: The quaternion to calculate the magnitude of
-/// - returns: The magnitude of the quaternion
-public func magnitude (_ q: quaterniond) -> Double {
-    return sqrt(dot(q, q))
+public func magnitude<T: ArithmeticFloatType> (_ q: tquaternion<T>) -> T {
+    return dot(q, q).squareRoot()
 }
 
 
 /// Calculates the normalized quaternionn
 /// - parameter q: The quaternionen to normalize
 /// - returns: The normalized quaternion
-public func normalize (_ q: quaternioni) -> quaternionf {
+public func normalize<T: ArithmeticIntType> (_ q: tquaternion<T>) -> tquaternion<Float> {
     let mag : Float = magnitude(q)
-    return quaternionf(Float(q.x) / mag, Float(q.v.x) / mag, Float(q.v.y) / mag, Float(q.v.z) / mag)
+    return tquaternion<Float>(q.x.toFloat() / mag, q.v.x.toFloat() / mag, q.v.y.toFloat() / mag, q.v.z.toFloat() / mag)
 }
 
 
 /// Calculates the normalized quaternionn
 /// - parameter q: The quaternionen to normalize
 /// - returns: The normalized quaternion
-public func normalize<T: ArithmeticType> (_ q: tquaternion<T>) -> tquaternion<T> {
-    let mag : Float = magnitude(q)
+public func normalize<T: ArithmeticFloatType> (_ q: tquaternion<T>) -> tquaternion<T> {
+    let mag : T = magnitude(q)
     return tquaternion<T>(q.x / mag, q.v.x / mag, q.v.y / mag, q.v.z / mag)
 }

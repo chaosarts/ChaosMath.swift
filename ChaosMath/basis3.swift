@@ -39,6 +39,7 @@ public struct tbasis3<T: ArithmeticType>: Equatable {
         return left.x == right.x && left.y == right.y && left.z == right.z
     }
     
+    
     /*
      +--------------------------------------------------------------------------
      | Stored properties
@@ -110,37 +111,46 @@ public struct tbasis3<T: ArithmeticType>: Equatable {
 }
 
 
+extension tbasis3 where T: ArithmeticFloatType {
+    public init<S: ArithmeticIntType> (_ b: tbasis3<S>) {
+        self.x = VectorType(b.x)
+        self.y = VectorType(b.y)
+        self.z = VectorType(b.z)
+    }
+}
+
+
 public typealias basis3i = tbasis3<Int>
 public typealias basis3f = tbasis3<Float>
 public typealias basis3d = tbasis3<Double>
 public typealias basis3 = basis3f
 
-/// Returns the transformation matrix from one basis to another
-/// - parameter from: The basis to transform from
-/// - parameter to: The basis to transform to
-/// - returns: The transformation matrix
-public func transformation (_ from: basis3i, _ to: basis3i) -> mat3f {
-    do {
-        let invertedMat : mat3f = try invert(to.mat)
-        let floatMat : mat3f = mat3f(
-            Float(from.x.x), Float(from.x.y), Float(from.x.z),
-            Float(from.y.x), Float(from.y.y), Float(from.y.z),
-            Float(from.z.x), Float(from.z.y), Float(from.z.z)
-        )
-        return invertedMat * floatMat
-    } catch {
-        // Won't be reached anyway. Matrix of basis are ensured to be invertible
-        return mat3f()
-    }
-}
-
-
-public func transformation<T: ArithmeticType> (_ from: tbasis3<T>, _ to: tbasis3<T>) -> tmat3<T> {
-    do {
-        let inverseTo : tmat3<T> = try invert(to.mat)
-        return inverseTo * from.mat
-    }
-    catch {
-        return tmat3<T>()
-    }
-}
+///// Returns the transformation matrix from one basis to another
+///// - parameter from: The basis to transform from
+///// - parameter to: The basis to transform to
+///// - returns: The transformation matrix
+//public func transformation (_ from: basis3i, _ to: basis3i) -> mat3f {
+//    do {
+//        let invertedMat : mat3f = try invert(to.mat)
+//        let floatMat : mat3f = mat3f(
+//            Float(from.x.x), Float(from.x.y), Float(from.x.z),
+//            Float(from.y.x), Float(from.y.y), Float(from.y.z),
+//            Float(from.z.x), Float(from.z.y), Float(from.z.z)
+//        )
+//        return invertedMat * floatMat
+//    } catch {
+//        // Won't be reached anyway. Matrix of basis are ensured to be invertible
+//        return mat3f()
+//    }
+//}
+//
+//
+//public func transformation<T: ArithmeticType> (_ from: tbasis3<T>, _ to: tbasis3<T>) -> tmat3<T> {
+//    do {
+//        let inverseTo : tmat3<T> = try invert(to.mat)
+//        return inverseTo * from.mat
+//    }
+//    catch {
+//        return tmat3<T>()
+//    }
+//}
