@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+public protocol VectorType : ExpressibleByArrayLiteral, Equatable, ExpressibleByIntegerLiteral {
+    static var dim : Int {get}
+}

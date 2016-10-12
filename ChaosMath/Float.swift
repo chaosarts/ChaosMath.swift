@@ -10,14 +10,46 @@ import Foundation
 
 extension Float : ArithmeticFloatType {
     
-    public init<T: ArithmeticIntType> (_ value: T) {
+    public init<T: ArithmeticType> (_ value: T) {
         self.init(value.toFloat())
     }
+    
+    
+    public func toInt () -> Int {
+        return Int(self)
+    }
+    
+    
+    public func toInt8 () -> Int8 {
+        return Int8(self)
+    }
+    
+    
+    public func toInt16 () -> Int16 {
+        return Int16(self)
+    }
+    
+    
+    public func toInt32 () -> Int32 {
+        return Int32(self)
+    }
+    
+    
+    public func toInt64 () -> Int64 {
+        return Int64(self)
+    }
+    
     
     
     public func toFloat() -> Float {
         return self
     }
+    
+    
+    public func toDouble() -> Double {
+        return Double(self)
+    }
+    
     
     public func sin () -> Float {
         return Darwin.sin(self)

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct tvec4<T: ArithmeticType> : ExpressibleByArrayLiteral, Equatable {
+public struct tvec4<T: ArithmeticType> : VectorType {
 
     /// Describes the type of the elements
     public typealias ElementType = T
@@ -151,6 +151,14 @@ public struct tvec4<T: ArithmeticType> : ExpressibleByArrayLiteral, Equatable {
     public init (_ value: ElementType) {
         self.init(value, value, value, value);
     }
+    
+    
+    /// Implementation of the ExpressibleByIntegerLiteral protocol
+    /// - parameter value
+    public init(integerLiteral value: Int) {
+        self.init(ElementType(value), ElementType(value), ElementType(value), ElementType(value))
+    }
+    
     
     /// Initializes the vector to null vector
     public init () {

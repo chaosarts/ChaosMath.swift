@@ -11,7 +11,6 @@ import Foundation
 
 public protocol ArithmeticType : SignedNumber, ExpressibleByIntegerLiteral, Comparable, CustomStringConvertible
 {
-    func toFloat () -> Float
 	static prefix func - (value: Self) -> Self;
 	static func + (left: Self, right: Self) -> Self
 	static func - (left: Self, right: Self) -> Self
@@ -21,6 +20,23 @@ public protocol ArithmeticType : SignedNumber, ExpressibleByIntegerLiteral, Comp
     static func -= (left: inout Self, right: Self)
     static func *= (left: inout Self, right: Self)
     static func /= (left: inout Self, right: Self)
+ 	
+    init<T: ArithmeticType> (_ value: T)
+    init(_ value: Int)
+    init(_ value: Int8)
+    init(_ value: Int16)
+    init(_ value: Int32)
+    init(_ value: Int64)
+    init(_ value: Float)
+    init(_ value: Double)
+    
+    func toInt () -> Int
+    func toInt8 () -> Int8
+    func toInt16 () -> Int16
+    func toInt32 () -> Int32
+    func toInt64 () -> Int64
+    func toFloat () -> Float
+    func toDouble () -> Double
 }
 
 
@@ -36,7 +52,6 @@ public protocol ArithmeticIntType : ArithmeticType {
 
 
 public protocol ArithmeticFloatType : BinaryFloatingPoint, ExpressibleByFloatLiteral, ArithmeticType {
-    init<T: ArithmeticIntType> (_ value: T)
     func sin () -> Self
     func asin () -> Self
     func cos() -> Self
