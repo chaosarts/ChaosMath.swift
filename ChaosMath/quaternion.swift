@@ -24,7 +24,7 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     /// - parameter value: The quaternion to inverse
     /// - returns: The inverse quaternion
     public static prefix func -(_ value: SelfType) -> SelfType {
-        return SelfType(-value.r, -value.v)
+        return SelfType(-value.re, -value.im)
     }
     
     
@@ -33,7 +33,7 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     /// - parameter right: Right side operand
     /// - returns: The sum of the two quaternions
     public static func + (left: SelfType, right: SelfType) -> SelfType {
-        return SelfType(left.r + right.r, left.v + right.v)
+        return SelfType(left.re + right.re, left.im + right.im)
     }
     
     
@@ -42,7 +42,7 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     /// - parameter right: Right side operand
     /// - returns: The difference of the two quaternions
     public static func - (left: SelfType, right: SelfType) -> SelfType {
-        return SelfType(left.r - right.r, left.v - right.v)
+        return SelfType(left.re - right.re, left.im - right.im)
     }
     
     
@@ -51,10 +51,10 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     /// - parameter right: Right side operand
     /// - returns: The product of the two quaternions
     public static func * (left: SelfType, right: SelfType) -> SelfType {
-        let r : ElementType = left.r * right.r - left.i * right.i - left.j * right.j - left.k * right.k
-        let i : ElementType = left.r * right.i - left.i * right.r - left.j * right.k - left.k * right.j
-        let j : ElementType = left.r * right.j - left.i * right.k - left.j * right.r - left.k * right.i
-        let k : ElementType = left.r * right.k - left.i * right.j - left.j * right.i - left.k * right.r
+        let r : ElementType = left.re * right.re - left.i * right.i - left.j * right.j - left.k * right.k
+        let i : ElementType = left.re * right.i - left.i * right.re - left.j * right.k - left.k * right.j
+        let j : ElementType = left.re * right.j - left.i * right.k - left.j * right.re - left.k * right.i
+        let k : ElementType = left.re * right.k - left.i * right.j - left.j * right.i - left.k * right.re
         
         return SelfType(r, VectorType(i, j, k))
     }
@@ -67,10 +67,10 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
      */
 
     /// Provides the real part of the quaternion
-    public var r: ElementType
+    public var re: ElementType
     
     /// Provides the imaginary vector
-    public var v: VectorType
+    public var im: VectorType
     
     
     /*
@@ -81,49 +81,49 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     
     /// Provides the components as a list
     public var array : Array<ElementType> {
-        get {return [r, v.x, v.y, v.z]}
+        get {return [re, im.x, im.y, im.z]}
     }
     
     /// Provides the imaginary part i of the quaternion
     public var i: ElementType {
-        get {return v.x}
-        set {v.x = newValue}
+        get {return im.x}
+        set {im.x = newValue}
     }
     
     /// Provides the imaginary part j of the quaternion
     public var j: ElementType {
-        get {return v.y}
-        set {v.y = newValue}
+        get {return im.y}
+        set {im.y = newValue}
     }
     
     /// Provides the imaginary part k of the quaternion
     public var k: ElementType {
-        get {return v.z}
-        set {v.z = newValue}
+        get {return im.z}
+        set {im.z = newValue}
     }
     
     
     public var x: ElementType {
-        get {return r}
-        set {r = newValue}
+        get {return re}
+        set {re = newValue}
     }
     
     /// Provides the imaginary part i of the quaternion
     public var y: ElementType {
-        get {return v.x}
-        set {v.x = newValue}
+        get {return im.x}
+        set {im.x = newValue}
     }
     
     /// Provides the imaginary part j of the quaternion
     public var z: ElementType {
-        get {return v.y}
-        set {v.y = newValue}
+        get {return im.y}
+        set {im.y = newValue}
     }
     
     /// Provides the imaginary part k of the quaternion
     public var w: ElementType {
-        get {return v.z}
-        set {v.z = newValue}
+        get {return im.z}
+        set {im.z = newValue}
     }
     
     /*
@@ -134,8 +134,8 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     
     
     public init (_ r: ElementType, _ v: VectorType) {
-        self.r = r
-        self.v = v
+        self.re = r
+        self.im = v
     }
     
     /// Initializes the quaternion with its four components
@@ -172,18 +172,18 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
     /// Copy constructor
     /// - parameter q: The quaternion to copy values from
     public init (_ q: SelfType) {
-        self.init(q.r, q.i, q.j, q.k)
+        self.init(q.re, q.i, q.j, q.k)
     }
     
     
     /// Copies the first four elements of the fiven list, otherwise 0
     /// - parameter array: The array of values to copy from
     public init (_ array: Array<ElementType>) {
-        r = array.count > 0 ? array[0] : 0
-        v = VectorType()
-        v.x = array.count > 1 ? array[1] : 0
-        v.y = array.count > 2 ? array[2] : 0
-        v.z = array.count > 3 ? array[3] : 0
+        re = array.count > 0 ? array[0] : 0
+        im = VectorType()
+        im.x = array.count > 1 ? array[1] : 0
+        im.y = array.count > 2 ? array[2] : 0
+        im.z = array.count > 3 ? array[3] : 0
     }
     
     
@@ -196,7 +196,7 @@ public struct tquaternion<T: ArithmeticType> : ExpressibleByArrayLiteral {
 
 extension tquaternion where T: ArithmeticFloatType {
     public init<S: ArithmeticIntType> (_ q: tquaternion<S>) {
-        self.init(T(q.r), tvec3<T>(q.v))
+        self.init(T(q.re), tvec3<T>(q.im))
     }
 }
 
@@ -210,7 +210,7 @@ public typealias quaternion = quaternionf
 /// - parameter q: The quaternion to conjugate
 /// - returns: The conjugated quaternion
 public func conjugate<T: ArithmeticType> (_ q: tquaternion<T>) -> tquaternion<T> {
-    return tquaternion<T>(q.r, -q.v)
+    return tquaternion<T>(q.re, -q.im)
 }
 
 
@@ -219,7 +219,7 @@ public func conjugate<T: ArithmeticType> (_ q: tquaternion<T>) -> tquaternion<T>
 /// - parameter right: The right side operand
 /// - returns: The dot product
 public func dot<T: ArithmeticType> (_ left: tquaternion<T>, _ right: tquaternion<T>) -> T {
-    return left.r * right.r + left.i * right.i + left.j * right.j + left.k * right.k
+    return left.re * right.re + left.i * right.i + left.j * right.j + left.k * right.k
 }
 
 
@@ -228,7 +228,7 @@ public func dot<T: ArithmeticType> (_ left: tquaternion<T>, _ right: tquaternion
 /// - parameter right: The right side operand
 /// - returns: The cross product
 public func cross<T: ArithmeticType> (_ left: tquaternion<T>, _ right: tquaternion<T>) -> tquaternion<T> {
-    return tquaternion<T>(0, cross(left.v, right.v))
+    return tquaternion<T>(0, cross(left.im, right.im))
 }
 
 
@@ -261,7 +261,7 @@ public func magnitude<T: ArithmeticFloatType> (_ q: tquaternion<T>) -> T {
 /// - returns: The normalized quaternion
 public func normalize<T: ArithmeticIntType> (_ q: tquaternion<T>) -> tquaternion<Float> {
     let mag : Float = magnitude(q)
-    return tquaternion<Float>(q.x.toFloat() / mag, q.v.x.toFloat() / mag, q.v.y.toFloat() / mag, q.v.z.toFloat() / mag)
+    return tquaternion<Float>(q.x.toFloat() / mag, q.im.x.toFloat() / mag, q.im.y.toFloat() / mag, q.im.z.toFloat() / mag)
 }
 
 
@@ -270,5 +270,5 @@ public func normalize<T: ArithmeticIntType> (_ q: tquaternion<T>) -> tquaternion
 /// - returns: The normalized quaternion
 public func normalize<T: ArithmeticFloatType> (_ q: tquaternion<T>) -> tquaternion<T> {
     let mag : T = magnitude(q)
-    return tquaternion<T>(q.x / mag, q.v.x / mag, q.v.y / mag, q.v.z / mag)
+    return tquaternion<T>(q.x / mag, q.im.x / mag, q.im.y / mag, q.im.z / mag)
 }

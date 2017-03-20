@@ -46,6 +46,11 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     public static var e4 : SelfType {
         get {return SelfType(0, 0, 0, 1)}
     }
+    
+    /// Provides the identity matrix
+    public static var identity : SelfType {
+        return SelfType(1)
+    }
 
     
     /*

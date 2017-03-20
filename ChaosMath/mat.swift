@@ -25,7 +25,7 @@ public protocol MatrixType : ExpressibleByArrayLiteral, Equatable, CustomStringC
 
 
 /// Enumerates matrix errors
-public enum MatrixError : Error {
+public enum MatrixError : Swift.Error {
     case NonRegular
     case OutOfBoundsIndex
 }
