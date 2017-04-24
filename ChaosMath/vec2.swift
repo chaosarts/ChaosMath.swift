@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct tvec2<T: ArithmeticType> : VectorType {
+public struct tvec2<T: ArithmeticScalarType> : VectorType {
 
     /// Describes the type of the components
 	public typealias ElementType = T
@@ -24,17 +24,17 @@ public struct tvec2<T: ArithmeticType> : VectorType {
     
     /// Provides the dimension of this vector struct
     public static var dim : Int {
-        get {return 2}
+        return 2
     }
     
     /// Provides the first vector of the standard base
     public static var e1 : SelfType {
-        get {return SelfType(1, 0)}
+        return SelfType(1, 0)
     }
     
     /// Provides the second vector of the standard base
     public static var e2 : SelfType {
-        get {return SelfType(0, 1)}
+        return SelfType(0, 1)
     }
 	
 	/*
@@ -58,7 +58,7 @@ public struct tvec2<T: ArithmeticType> : VectorType {
 	
 	/// Returns the vector as array
 	public var array : Array<ElementType> {
-		get {return [x, y]}
+		return [x, y]
 	}
 	
 	
@@ -67,28 +67,24 @@ public struct tvec2<T: ArithmeticType> : VectorType {
 	 | Initializers
 	 +--------------------------------------------------------------------------
 	 */
-	
-	/// Initializes the vector
-	/// - parameter x: The x component of the vector
- 	/// - parameter y: The y component of the vector
-	public init (_ x: ElementType, _ y: ElementType) {
-		self.x = x
-		self.y = y
-	}
+
+    
+    /// Initializes the vector
+    /// - parameter x: The x component of the vector
+    /// - parameter y: The y component of the vector
+    public init <ForeignType: ArithmeticScalarType>(_ x: ForeignType = 0, _ y: ForeignType = 0) {
+        self.x = ElementType(x)
+        self.y = ElementType(y)
+    }
 	
 	
 	/// Initializes the vector with an other
 	/// - parameters vec: The vector to copy
-	public init (_ vec: SelfType) {
-		self.init(vec.x, vec.y)
+	public init<ForeignType: ArithmeticScalarType> (_ vec: tvec2<ForeignType>) {
+		self.x = ElementType(vec.x)
+        self.y = ElementType(vec.y)
 	}
-	
-	
-	/// Initializes the vector by setting all components to given value
-	/// - parameter value: The value to set
-	public init (_ value: ElementType) {
-		self.init(value, value)
-	}
+    
     
     /// Implementation of the ExpressibleByIntegerLiteral protocol
     /// - parameter value
@@ -96,24 +92,12 @@ public struct tvec2<T: ArithmeticType> : VectorType {
         self.init(ElementType(value), ElementType(value))
     }
 	
-	/// Initializes the vector to null vector
-	public init () {
-		self.init(0, 0)
-	}
-	
 	
 	/// Initializes the vector with an array
-	public init(arrayLiteral elements: ElementType...) {
+	public init (arrayLiteral elements: ElementType...) {
 		if (elements.count > 0) {x = elements[0]}
 		if (elements.count > 1) {y = elements[1]}
 	}
-}
-
-
-extension tvec2 where T: ArithmeticFloatType {
-    public init <S: ArithmeticIntType> (_ vec: tvec2<S>) {
-        self.init(T(vec.x), T(vec.y))
-    }
 }
 
 
@@ -132,16 +116,20 @@ public typealias vec2 = vec2f
 /// Negates the vector
 /// - parameter value: The vector to be negated
 /// - returns: The negated vector
-public prefix func -<T: ArithmeticType> (value: tvec2<T>) -> tvec2<T> {
-    return tvec2<T>(-value.x, -value.y)
+public prefix func -<T: ArithmeticScalarType> (value: tvec2<T>) -> tvec2<T> {
+    let x : T = -value.x
+    let y : T = -value.y
+    return tvec2<T>(x, y)
 }
 
 /// Sum operator
 /// - parameter left: Left operand
 /// - parameter right: Right operand
 /// - returns: The sum of both operands
-public func +<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
-    return tvec2<T>(left.x + right.x, left.y + right.y)
+public func +<T: ArithmeticScalarType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
+    let x : T = left.x + right.x
+    let y : T = left.y + right.y
+    return tvec2<T>(x, y)
 }
 
 
@@ -149,8 +137,10 @@ public func +<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
 /// - parameter left: Left operand
 /// - parameter right: Right operand
 /// - returns: The difference of both operands
-public func -<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
-    return left + (-right)
+public func -<T: ArithmeticScalarType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
+    let x : T = left.x - right.x
+    let y : T = left.y - right.y
+    return tvec2<T>(x, y)
 }
 
 
@@ -158,20 +148,32 @@ public func -<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
 /// - parameter left: Left operand
 /// - parameter right: Right operand
 /// - returns: The difference of both operands
-public func *<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
-    return tvec2<T>(left.x * right.x, left.y * right.y)
+public func *<T: ArithmeticScalarType> (left: tvec2<T>, right: tvec2<T>) -> tvec2<T> {
+    let x : T = left.x * right.x
+    let y : T = left.y * right.y
+    return tvec2<T>(x, y)
 }
 
 
-/// Multiplies a scalar with a vecotr
-public func *<T: ArithmeticType> (left: T, right: tvec2<T>) -> tvec2<T> {
-    return tvec2<T>(left * right.x, left * right.y)
+/// Multiplies a scalar with a vector
+/// - parameter left: The scalar value
+/// - parameter right: The vector
+public func *<S: ArithmeticScalarType, T: ArithmeticScalarType> (left: S, right: tvec2<T>) -> tvec2<T> {
+    let scalar : T = T(left)
+    let x : T = scalar * right.x
+    let y : T = scalar * right.y
+    return tvec2<T>(x, y)
 }
 
 
-/// Multiplies a scalar with a vecotr
-public func *<T: ArithmeticType> (left: tvec2<T>, right: T) -> tvec2<T> {
-    return right * left
+/// Multiplies a vector with a scalar
+/// - parameter left: The vector
+/// - parameter right: The scalar value
+public func *<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: tvec2<T>, right: S) -> tvec2<T> {
+    let scalar : T = T(right)
+    let x : T = left.x * scalar
+    let y : T = left.y * scalar
+    return tvec2<T>(x, y)
 }
 
 
@@ -179,15 +181,18 @@ public func *<T: ArithmeticType> (left: tvec2<T>, right: T) -> tvec2<T> {
 /// - parameter left: The left side of the operator
 /// - parameter right: The right side of the operator
 /// - returns: The vector devided by scalar
-public func /<T: ArithmeticType> (left: tvec2<T>, right: T) -> tvec2<T> {
-    return tvec2<T>(left.x / right, left.y / right)
+public func /<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: tvec2<T>, right: S) -> tvec2<T> {
+    let scalar : T = T(right)
+    let x : T = left.x / scalar
+    let y : T = left.y / scalar
+    return tvec2<T>(x, y)
 }
 
 
-/// Compund sum operator
+/// Compound sum operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func +=<T: ArithmeticType> (left: inout tvec2<T>, right: tvec2<T>) {
+public func +=<T: ArithmeticScalarType> (left: inout tvec2<T>, right: tvec2<T>) {
     left = left + right
 }
 
@@ -196,25 +201,25 @@ public func +=<T: ArithmeticType> (left: inout tvec2<T>, right: tvec2<T>) {
 /// Compound diff operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func -=<T: ArithmeticType> (left: inout tvec2<T>, right: tvec2<T>) {
+public func -=<T: ArithmeticScalarType> (left: inout tvec2<T>, right: tvec2<T>) {
     left = left - right
 }
 
 
 
-/// Compound sum operator
+/// Compound product operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func *=<T: ArithmeticType> (left: inout tvec2<T>, right: tvec2<T>) {
+public func *=<T: ArithmeticScalarType> (left: inout tvec2<T>, right: tvec2<T>) {
     left = left * right
 }
 
 
 
-/// Compund sum operator
+/// Compound product operator with a scalar
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func *=<T: ArithmeticType> (left: inout tvec2<T>, right: T) {
+public func *=<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: inout tvec2<T>, right: S) {
     left = left * right
 }
 
@@ -222,13 +227,13 @@ public func *=<T: ArithmeticType> (left: inout tvec2<T>, right: T) {
 /// Compound division operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func /=<T: ArithmeticType> (left: inout tvec2<T>, right: T) {
+public func /=<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: inout tvec2<T>, right: S) {
     left = left / right
 }
 
 
 /// Compares to vectors
-public func ==<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> Bool {
+public func ==<T: ArithmeticScalarType> (left: tvec2<T>, right: tvec2<T>) -> Bool {
     return left.x == right.x && left.y == right.y
 }
 
@@ -240,16 +245,20 @@ public func ==<T: ArithmeticType> (left: tvec2<T>, right: tvec2<T>) -> Bool {
  */
 
 /// Returns the dot product of two vectors
-public func dot<T: ArithmeticType> (_ left: tvec2<T>, _ right: tvec2<T>) -> T {
-	return left.x * right.x + left.y * right.y
+public func dot<T: ArithmeticScalarType> (_ left: tvec2<T>, _ right: tvec2<T>) -> T {
+    let a : T = left.x * right.x
+    let b : T = left.y * right.y
+	return a + b
 }
 
 /// Calculates the determinant of the two vectors
 /// - parameter left
 /// - parameter right
 /// - returns: The angle in radian
-public func determinant<T: ArithmeticType> (_ left: tvec2<T>, _ right: tvec2<T>) -> T {
-    return left.x * right.y - left.y * right.x
+public func determinant<T: ArithmeticScalarType> (_ left: tvec2<T>, _ right: tvec2<T>) -> T {
+    let a : T = left.x * right.y
+    let b : T = left.y * right.x
+    return a - b
 }
 
 
@@ -257,14 +266,14 @@ public func determinant<T: ArithmeticType> (_ left: tvec2<T>, _ right: tvec2<T>)
 /// - parameter value: The vector to calculate the magnitude from
 /// - returns: The magnitude of the vector
 public func magnitude<T: ArithmeticIntType> (_ value: tvec2<T>) -> Float {
-	return dot(value, value).squareRoot()
+	return dot(value, value).sqrt()
 }
 
 /// Returns the magnitude of the vector
 /// - parameter value: The vector to calculate the magnitude from
 /// - returns: The magnitude of the vector
 public func magnitude<T: ArithmeticFloatType> (_ value: tvec2<T>) -> T {
-	return dot(value, value).squareRoot()
+	return dot(value, value).sqrt()
 }
 
 
@@ -272,8 +281,10 @@ public func magnitude<T: ArithmeticFloatType> (_ value: tvec2<T>) -> T {
 /// - parameter value: The vector to normalize
 /// - returns: The normalized vector
 public func normalize<T: ArithmeticIntType> (_ value: tvec2<T>) -> vec2f {
-	let l = magnitude(value)
-	return vec2f(value.x.toFloat() / l, value.y.toFloat() / l)
+	let l : Float = 1 / magnitude(value)
+    let x : Float = value.x.toFloat() * l 
+    let y : Float = value.y.toFloat() * l
+	return vec2f(x, y)
 }
 
 
@@ -281,7 +292,8 @@ public func normalize<T: ArithmeticIntType> (_ value: tvec2<T>) -> vec2f {
 /// - parameter value: The vector to normalize
 /// - returns: The normalized vector
 public func normalize<T: ArithmeticFloatType> (_ value: tvec2<T>) -> tvec2<T> {
-	return value / magnitude(value)
+    let invMag : T = T(1) / magnitude(value)
+	return value * invMag
 }
 
 

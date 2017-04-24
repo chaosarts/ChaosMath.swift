@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct tbasis4<T: ArithmeticType>: Equatable {
+public struct tbasis4<T: ArithmeticScalarType>: Equatable {
     
     /*
      +--------------------------------------------------------------------------
@@ -30,36 +30,52 @@ public struct tbasis4<T: ArithmeticType>: Equatable {
     
     /*
      +--------------------------------------------------------------------------
-     | Static function
+     | Stored properties
      +--------------------------------------------------------------------------
      */
+
+    /// Provides the first vector of the basis
+    public let b1 : VectorType
     
-    public static func == (left: SelfType, right: SelfType) -> Bool
-    {
-        return left.x == right.x && left.y == right.y && left.z == right.z && left.w == right.w
-    }
+    /// Provides the second vector of the basis
+    public let b2 : VectorType
+
+    /// Provides the third vector of the basis
+    public let b3 : VectorType
+
+    /// Provides the fourth vector of the basis
+    public let b4 : VectorType
+
     
     /*
      +--------------------------------------------------------------------------
-     | Stored properties
+     | Derived properties
      +--------------------------------------------------------------------------
      */
     
     /// Provides the first vector of the basis
-    public let x: VectorType
+    public var x: VectorType {
+        return b1
+    }
     
     /// Provides the second vector of the basis
-    public let y: VectorType
+    public var y: VectorType {
+        return b2
+    }
 
     /// Provides the third vector of the basis
-    public let z: VectorType
+    public var z: VectorType {
+        return b3
+    }
 
     /// Provides the fourth vector of the basis
-    public let w: VectorType
+    public var w: VectorType {
+        return b4
+    }
     
     /// Represents the basis as matrix
     public var mat: MatrixType {
-        get {return MatrixType(x, y, z, w)}
+        return MatrixType(x, y, z, w)
     }
     
     
@@ -71,58 +87,50 @@ public struct tbasis4<T: ArithmeticType>: Equatable {
     
     /// Initializes the basis with the standard basis vectors
     public init () {
-        self.x = VectorType.e1
-        self.y = VectorType.e2
-        self.z = VectorType.e3
-        self.w = VectorType.e4
+        self.b1 = VectorType.e1
+        self.b2 = VectorType.e2
+        self.b3 = VectorType.e3
+        self.b4 = VectorType.e4
     }
     
     
     /// Initializes the basis with given basis vectors
-    /// - parameter x: The first basis vector
-    /// - parameter y: The second basis vector
-    public init (_ x: VectorType, _ y: VectorType, _ z: VectorType, _ w: VectorType) throws {
-        guard determinant(x, y, z, w) != 0 else {
-            throw BasisError.ColinearBase
+    /// - parameter b1: The first basis vector
+    /// - parameter b2: The second basis vector
+    /// - parameter b3: The second basis vector
+    /// - parameter b4: The second basis vector
+    public init?<ForeignType: ArithmeticScalarType> (_ b1: tvec4<ForeignType>, _ b2: tvec4<ForeignType>, _ b3: tvec4<ForeignType>, _ b4: tvec4<ForeignType>) {
+        if determinant(b1, b2, b3, b4) == 0 {
+            return nil
         }
         
-        self.x = x
-        self.y = y
-        self.z = z
-        self.w = w
+        self.b1 = VectorType(b1)
+        self.b2 = VectorType(b2)
+        self.b3 = VectorType(b3)
+        self.b4 = VectorType(b4)
     }
     
     
     /// Initializes the basis with a matrix 
     /// - parameter mat: The matrix to adopt the
-    public init (_ mat: MatrixType) throws {
-        guard mat.det != 0 else {
-            throw BasisError.ColinearBase
+    public init?<ForeignType: ArithmeticScalarType> (_ mat: tmat4<ForeignType>) {
+        if mat.det == 0 {
+            return nil
         }
         
-        x = VectorType(mat.array[0], mat.array[1], mat.array[2], mat.array[3])
-        y = VectorType(mat.array[4], mat.array[5], mat.array[6], mat.array[7])
-        z = VectorType(mat.array[8], mat.array[9], mat.array[10], mat.array[11])
-        w = VectorType(mat.array[12], mat.array[13], mat.array[14], mat.array[15])
+        b1 = VectorType(mat.array[0], mat.array[1], mat.array[2], mat.array[3])
+        b2 = VectorType(mat.array[4], mat.array[5], mat.array[6], mat.array[7])
+        b3 = VectorType(mat.array[8], mat.array[9], mat.array[10], mat.array[11])
+        b4 = VectorType(mat.array[12], mat.array[13], mat.array[14], mat.array[15])
     }
     
     
     /// Copies a basis
-    public init (_ basis: SelfType) {
-        x = basis.x
-        y = basis.y
-        z = basis.z
-        w = basis.w
-    }
-}
-
-
-extension tbasis4 where T: ArithmeticFloatType {
-    public init<S: ArithmeticIntType> (_ b: tbasis4<S>) {
-        self.x = VectorType(b.x)
-        self.y = VectorType(b.y)
-        self.z = VectorType(b.z)
-        self.w = VectorType(b.w)
+    public init<ForeignType: ArithmeticScalarType> (_ basis: tbasis4<ForeignType>) {
+        b1 = VectorType(basis.b1)
+        b2 = VectorType(basis.b2)
+        b3 = VectorType(basis.b3)
+        b4 = VectorType(basis.b4)
     }
 }
 
@@ -131,6 +139,16 @@ public typealias basis4i = tbasis4<Int>
 public typealias basis4f = tbasis4<Float>
 public typealias basis4d = tbasis4<Double>
 public typealias basis4 = basis4f
+    
+/*
+ +------------------------------------------------------------------------------
+ | Operators
+ +------------------------------------------------------------------------------
+ */
+
+public func ==<ElementType: ArithmeticScalarType> (left: tbasis4<ElementType>, right: tbasis4<ElementType>) -> Bool {
+    return left.b1 == right.b1 && left.b2 == right.b2 && left.b3 == right.b3 && left.b4 == right.b4
+}
 
 ///// Returns the transformation matrix from one basis to another
 ///// - parameter from: The basis to transform from

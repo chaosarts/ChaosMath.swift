@@ -9,7 +9,7 @@
 import ChaosCore
 import Foundation
 
-public struct tmat3<T: ArithmeticType> : MatrixType {
+public struct tmat3<T: ArithmeticScalarType> : MatrixType {
 
     public typealias ElementType = T
 
@@ -39,8 +39,8 @@ public struct tmat3<T: ArithmeticType> : MatrixType {
     +--------------------------------------------------------------------------
     */
     
-    /// Provides the matrix as array as row-major
-    public private(set) var array : Array<ElementType>
+    /// Provides the matrix as array as column major
+    public private(set) var array : Array<ElementType> = Array<ElementType>(repeating: 0, count: rowCount * colCount)
     
     
     /*
@@ -51,59 +51,22 @@ public struct tmat3<T: ArithmeticType> : MatrixType {
     
     /// Provides the determinant of this matrix
     public var det : ElementType {
-        get {
-            do {return try determinant(col(0), col(1), col(2))}
-            catch {return 0}
-        }
+        return determinant(col(0)!, col(1)!, col(2)!)
     }
     
     /// Provides the list of row vectors
     public var rows : Array<VectorType> {
-        get {
-            do {return try [row(0), row(1), row(2)]}
-            catch {return []}
-        }
+        return [row(0)!, row(1)!, row(2)!]
     }
     
     /// Provides the list of col vectors
     public var cols : Array<VectorType> {
-        get {
-            do {return try [col(0), col(1), col(2)]}
-            catch {return []}
-        }
+        return [col(0)!, col(1)!, col(2)!]
     }
     
     /// Provides the string representation of the matrix
     public var description: String {
-        get {
-            var maxlength : Int = 0
-            
-            for i in 0..<array.count {
-                maxlength = max(array[i].description.characters.count, maxlength)
-            }
-            
-            maxlength += 1
-            
-            var output : String = ""
-            let lastColMinIndex = SelfType.colCount * (SelfType.rowCount - 1)
-            
-            for i in 0..<array.count {
-                if i < SelfType.colCount {
-                    output += "|"
-                    output += pad(array[i], maxlength - array[i].description.characters.count - 1)
-                }
-                else {
-                    output += pad(array[i], maxlength - array[i].description.characters.count)
-                }
-                
-                if i >= lastColMinIndex {
-                    output += "|\n"
-                }
-                
-            }
-            
-            return output
-        }
+        return array.description
     }
     
     
@@ -130,87 +93,105 @@ public struct tmat3<T: ArithmeticType> : MatrixType {
     }
     
     
+    /*
+     +--------------------------------------------------------------------------
+     | Initializers
+     +--------------------------------------------------------------------------
+     */
+    
+    
     /// Initializes the matrix with its 4 components
     /// - parameter a11: Component in first row and first column
     /// - parameter a21: Component in second row and first column
     /// - parameter a12: Component in first row and second column
     /// - parameter a22: Component in second row and second column
-    public init (_ a11: ElementType, _ a21: ElementType, _ a31: ElementType, 
-        _ a12: ElementType, _ a22: ElementType, _ a32: ElementType,
-        _ a13: ElementType, _ a23: ElementType, _ a33: ElementType) {
-        array = [a11, a21, a31, a12, a22, a32, a13, a23, a33]
+    public init<ForeignType: ArithmeticScalarType> (_ a11: ForeignType, _ a21: ForeignType, _ a31: ForeignType,
+        _ a12: ForeignType, _ a22: ForeignType, _ a32: ForeignType,
+        _ a13: ForeignType, _ a23: ForeignType, _ a33: ForeignType) {
+        array = [
+            ElementType(a11), ElementType(a21), ElementType(a31),
+            ElementType(a12), ElementType(a22), ElementType(a32),
+            ElementType(a13), ElementType(a23), ElementType(a33)
+        ]
     }
     
     
     /// Initializes the a diagonal matrix
     /// - parameter value: The value of the components with index i = j
-    public init (_ value: ElementType) {
-        array = [value, 0, 0, 0, value, 0, 0, 0, value]
-    }
-    
-    
-    /// Initializes the null matrix
-    public init () {
-        array = Array(repeating: 0, count: SelfType.rowCount * SelfType.colCount)
+    public init<ForeignType: ArithmeticScalarType> (_ value: ForeignType = 0) {
+        let val : ElementType = ElementType(value)
+        array[0] = val
+        array[4] = val
+        array[8] = val
     }
     
     
     /// Initializes the matrix with an array
     /// - parameter array: The row-major array to copy
-    public init (_ array: Array<ElementType>) {
-        self.init()
-        if (array.count > 0) {self.array[0] = array[0]}
-        if (array.count > 1) {self.array[1] = array[1]}
-        if (array.count > 2) {self.array[2] = array[2]}
-        if (array.count > 3) {self.array[3] = array[3]}
-        if (array.count > 4) {self.array[4] = array[4]}
-        if (array.count > 5) {self.array[5] = array[5]}
-        if (array.count > 6) {self.array[6] = array[6]}
-        if (array.count > 7) {self.array[7] = array[7]}
-        if (array.count > 8) {self.array[8] = array[8]}
+    public init<ForeignType: ArithmeticScalarType> (_ array: Array<ForeignType>) {
+        if (array.count > 0) {self.array[0] = ElementType(array[0])}
+        if (array.count > 1) {self.array[1] = ElementType(array[1])}
+        if (array.count > 2) {self.array[2] = ElementType(array[2])}
+        if (array.count > 3) {self.array[3] = ElementType(array[3])}
+        if (array.count > 4) {self.array[4] = ElementType(array[4])}
+        if (array.count > 5) {self.array[5] = ElementType(array[5])}
+        if (array.count > 6) {self.array[6] = ElementType(array[6])}
+        if (array.count > 7) {self.array[7] = ElementType(array[7])}
+        if (array.count > 8) {self.array[8] = ElementType(array[8])}
+    }
+    
+    
+    /// Initializes the matrix with three column vectors
+    /// - parameter a1: The first column
+    /// - parameter a2: The second column
+    public init<ForeignType: ArithmeticScalarType> (_ a1: tvec3<ForeignType>, _ a2: tvec3<ForeignType>, _ a3: tvec3<ForeignType>) {
+        array[0] = ElementType(a1.x)
+        array[1] = ElementType(a1.y)
+        array[2] = ElementType(a1.z)
+        array[3] = ElementType(a2.x)
+        array[4] = ElementType(a2.y)
+        array[5] = ElementType(a2.z)
+        array[6] = ElementType(a3.x)
+        array[7] = ElementType(a3.y)
+        array[8] = ElementType(a3.z)
     }
     
     
     /// Initializer for ExpressableByArrayLiteral
-    public init(arrayLiteral elements: ElementType...) {
+    public init (arrayLiteral elements: ElementType...) {
         self.init(elements)
     }
     
     
-    /// Initializes the matrix with two column vectors
-    /// - parameter a1: The first column
-    /// - parameter a2: The second column
-    public init (_ a1: VectorType, _ a2: VectorType, _ a3: VectorType) {
-        array = a1.array
-        array.append(contentsOf: a2.array)
-        array.append(contentsOf: a3.array)
-    }
+    /*
+     +--------------------------------------------------------------------------
+     | Methods
+     +--------------------------------------------------------------------------
+     */
     
     
     /// Returns the components of the i-th row as vector
     /// - parameter i: Index of the row to return
     /// - returns: The row vector at index i
-    public func row (_ i: Int) throws -> VectorType {
-        
-		guard i >= 0 && i < SelfType.rowCount else {
-            throw MatrixError.OutOfBoundsIndex
+    public func row (_ i: Int) -> VectorType? {
+		if i >= 0 && i < SelfType.rowCount {
+            return VectorType(array[i], array[i + SelfType.colCount], array[i + SelfType.colCount + SelfType.colCount])
         }
         
-        return VectorType(array[i], array[i + SelfType.colCount], array[i + SelfType.colCount + SelfType.colCount])
+        return nil
     }
     
     
     /// Returns the components of the i-th col as vector
     /// - parameter i: Index of the column to return
     /// - returns: The column vector at index i
-    public func col (_ i: Int) throws -> VectorType {
-        
-        guard i >= 0 && i < SelfType.rowCount else {
-            throw MatrixError.OutOfBoundsIndex
+    public func col (_ i: Int) -> VectorType? {
+        if i >= 0 && i < SelfType.rowCount {
+            let baseIndex : Int = i * SelfType.rowCount
+            return VectorType(array[baseIndex], array[baseIndex + 1], array[baseIndex + 2])
         }
         
-        let baseIndex : Int = i * SelfType.rowCount
-        return VectorType(array[baseIndex], array[baseIndex + 1], array[baseIndex + 2])
+        return nil
     }
 
 	
@@ -235,17 +216,6 @@ public struct tmat3<T: ArithmeticType> : MatrixType {
 }
 
 
-extension tmat3 where T: ArithmeticFloatType {
-    public init<S: ArithmeticIntType> (_ mat: tmat3<S>) {
-        self.init(
-            T(mat.array[0]), T(mat.array[1]), T(mat.array[2]),
-            T(mat.array[3]), T(mat.array[4]), T(mat.array[5]),
-            T(mat.array[6]), T(mat.array[7]), T(mat.array[8])
-        )
-    }
-}
-
-
 public typealias mat3i = tmat3<Int>
 public typealias mat3f = tmat3<Float>
 public typealias mat3d = tmat3<Double>
@@ -261,10 +231,18 @@ public typealias mat3 = mat3f
 /// Negates the given matrix
 /// - parameter mat: The matrix to negate
 /// - returns: The negated matrix
-public prefix func -<T: ArithmeticType> (mat: tmat3<T>) -> tmat3<T> {
-    return tmat3<T>(-mat.array[0], -mat.array[1], -mat.array[2],
-                    -mat.array[3], -mat.array[4], -mat.array[5],
-                    -mat.array[6], -mat.array[7], -mat.array[8])
+public prefix func -<T: ArithmeticScalarType> (mat: tmat3<T>) -> tmat3<T> {
+    let a11 : T = -mat.array[0]
+    let a21 : T = -mat.array[1]
+    let a31 : T = -mat.array[2]
+    let a12 : T = -mat.array[3]
+    let a22 : T = -mat.array[4]
+    let a32 : T = -mat.array[5]
+    let a13 : T = -mat.array[6]
+    let a23 : T = -mat.array[7]
+    let a33 : T = -mat.array[8]
+
+    return tmat3<T>(a11, a21, a31, a12, a22, a32, a13, a23, a33)
 }
 
 
@@ -272,12 +250,18 @@ public prefix func -<T: ArithmeticType> (mat: tmat3<T>) -> tmat3<T> {
 /// - parameter left: The left operand
 /// - parameter right: The right operand
 /// - returns: The sum of the matrices
-public func +<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
-    return tmat3<T>(
-        left.array[0] + right.array[0], left.array[1] + right.array[1], left.array[2] + right.array[2],
-        left.array[3] + right.array[3], left.array[4] + right.array[4], left.array[5] + right.array[5],
-        left.array[6] + right.array[6], left.array[7] + right.array[7], left.array[8] + right.array[8]
-    )
+public func +<T: ArithmeticScalarType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
+    let a11 : T = left.array[0] + right.array[0]
+    let a21 : T = left.array[1] + right.array[1]
+    let a31 : T = left.array[2] + right.array[2]
+    let a12 : T = left.array[3] + right.array[3]
+    let a22 : T = left.array[4] + right.array[4]
+    let a32 : T = left.array[5] + right.array[5]
+    let a13 : T = left.array[6] + right.array[6]
+    let a23 : T = left.array[7] + right.array[7]
+    let a33 : T = left.array[8] + right.array[8]
+
+    return tmat3<T>(a11, a21, a31, a12, a22, a32, a13, a23, a33)
 }
 
 
@@ -285,7 +269,7 @@ public func +<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
 /// - parameter left: The left operand
 /// - parameter right: The right operand
 /// - returns: The difference of the matrices
-public func -<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
+public func -<T: ArithmeticScalarType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
     return left - right
 }
 
@@ -294,18 +278,55 @@ public func -<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
 /// - parameter left: The left operand
 /// - parameter right: The right operand
 /// - returns: The product of the matrices
-public func *<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
-    let a11 : T = left.array[0] * right.array[0] + left.array[3] * right.array[1] + left.array[6] * right.array[2]
-    let a21 : T = left.array[1] * right.array[0] + left.array[4] * right.array[1] + left.array[7] * right.array[2]
-    let a31 : T = left.array[2] * right.array[0] + left.array[5] * right.array[1] + left.array[8] * right.array[2]
+public func *<T: ArithmeticScalarType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
+
+    var a : T = left.array[0] * right.array[0]
+    var b : T = left.array[3] * right.array[1]
+    var c : T = left.array[6] * right.array[2]
+    let a11 : T = a + b + c
+
+    a = left.array[1] * right.array[0]
+    b = left.array[4] * right.array[1]
+    c = left.array[7] * right.array[2]
+    let a21 : T = a + b + c
+
+    a = left.array[2] * right.array[0]
+    b = left.array[5] * right.array[1]
+    c = left.array[8] * right.array[2]
+    let a31 : T = a + b + c
+
     
-    let a12 : T = left.array[0] * right.array[3] + left.array[3] * right.array[4] + left.array[6] * right.array[5]
-    let a22 : T = left.array[1] * right.array[3] + left.array[4] * right.array[4] + left.array[7] * right.array[5]
-    let a32 : T = left.array[2] * right.array[3] + left.array[5] * right.array[4] + left.array[8] * right.array[5]
+    a = left.array[0] * right.array[3]
+    b = left.array[3] * right.array[4]
+    c = left.array[6] * right.array[5]
+    let a12 : T = a + b + c
+
+    a = left.array[1] * right.array[3]
+    b = left.array[4] * right.array[4]
+    c = left.array[7] * right.array[5]
+    let a22 : T = a + b + c
+
+    a = left.array[2] * right.array[3]
+    b = left.array[5] * right.array[4]
+    c = left.array[8] * right.array[5]
+    let a32 : T = a + b + c
+
     
-    let a13 : T = left.array[0] * right.array[6] + left.array[3] * right.array[7] + left.array[6] * right.array[8]
-    let a23 : T = left.array[1] * right.array[6] + left.array[4] * right.array[7] + left.array[7] * right.array[8]
-    let a33 : T = left.array[2] * right.array[6] + left.array[5] * right.array[7] + left.array[8] * right.array[8]
+    a = left.array[0] * right.array[6]
+    b = left.array[3] * right.array[7]
+    c = left.array[6] * right.array[8]
+    let a13 : T = a + b + c
+
+    a = left.array[1] * right.array[6]
+    b = left.array[4] * right.array[7]
+    c = left.array[7] * right.array[8]
+    let a23 : T = a + b + c
+
+    a = left.array[2] * right.array[6]
+    b = left.array[5] * right.array[7]
+    c = left.array[8] * right.array[8]
+    let a33 : T = a + b + c
+
     
     return tmat3<T>(a11, a12, a13, a21, a22, a23, a31, a32, a33)
 }
@@ -315,7 +336,7 @@ public func *<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> tmat3<T> {
 /// - parameter mat:
 /// - parameter vec:
 /// - returns: The resulting vector of the multiplication
-public func *<T: ArithmeticType> (vec: tvec3<T>, mat: tmat3<T>) -> tvec3<T> {
+public func *<T: ArithmeticScalarType> (vec: tvec3<T>, mat: tmat3<T>) -> tvec3<T> {
     var x : T = 0, y : T = 0, z : T = 0
     x += vec.x * mat.array[0]
     x += vec.y * mat.array[1]
@@ -336,7 +357,7 @@ public func *<T: ArithmeticType> (vec: tvec3<T>, mat: tmat3<T>) -> tvec3<T> {
 /// - parameter mat:
 /// - parameter vec:
 /// - returns: The resulting vector of the multiplication
-public func *<T: ArithmeticType> (mat: tmat3<T>, vec: tvec3<T>) -> tvec3<T> {
+public func *<T: ArithmeticScalarType> (mat: tmat3<T>, vec: tvec3<T>) -> tvec3<T> {
     var x : T = 0, y : T = 0, z : T = 0
     
     x += vec.x * mat.array[0]
@@ -359,18 +380,21 @@ public func *<T: ArithmeticType> (mat: tmat3<T>, vec: tvec3<T>) -> tvec3<T> {
 /// - parameter left: The left operand
 /// - parameter right: The right operand
 /// - returns: The product of the matrix and scalar
-public func *<T: ArithmeticType> (left: T, right: tmat3<T>) -> tmat3<T> {
-    let a11 : T = left * right.array[0]
-    let a21 : T = left * right.array[1]
-    let a31 : T = left * right.array[2]
+public func *<S: ArithmeticScalarType, T: ArithmeticScalarType> (left: S, right: tmat3<T>) -> tmat3<T> {
+
+    let scalar : T = T(left)
+
+    let a11 : T = scalar * right.array[0]
+    let a21 : T = scalar * right.array[1]
+    let a31 : T = scalar * right.array[2]
     
-    let a12 : T = left * right.array[3]
-    let a22 : T = left * right.array[4]
-    let a32 : T = left * right.array[5]
+    let a12 : T = scalar * right.array[3]
+    let a22 : T = scalar * right.array[4]
+    let a32 : T = scalar * right.array[5]
     
-    let a13 : T = left * right.array[6]
-    let a23 : T = left * right.array[7]
-    let a33 : T = left * right.array[8]
+    let a13 : T = scalar * right.array[6]
+    let a23 : T = scalar * right.array[7]
+    let a33 : T = scalar * right.array[8]
     
     return tmat3<T>(a11, a12, a13, a21, a22, a23, a31, a32, a33)
 }
@@ -380,8 +404,22 @@ public func *<T: ArithmeticType> (left: T, right: tmat3<T>) -> tmat3<T> {
 /// - parameter left: The left operand
 /// - parameter right: The right operand
 /// - returns: The product of the matrix and scalar
-public func *<T: ArithmeticType> (left: tmat3<T>, right: T) -> tmat3<T> {
-    return right * left
+public func *<T: ArithmeticScalarType> (left: tmat3<T>, right: T) -> tmat3<T> {
+    let scalar : T = T(right)
+
+    let a11 : T = left.array[0] * scalar
+    let a21 : T = left.array[1] * scalar
+    let a31 : T = left.array[2] * scalar
+    
+    let a12 : T = left.array[3] * scalar
+    let a22 : T = left.array[4] * scalar
+    let a32 : T = left.array[5] * scalar
+    
+    let a13 : T = left.array[6] * scalar
+    let a23 : T = left.array[7] * scalar
+    let a33 : T = left.array[8] * scalar
+    
+    return tmat3<T>(a11, a12, a13, a21, a22, a23, a31, a32, a33)
 }
 
 
@@ -389,19 +427,25 @@ public func *<T: ArithmeticType> (left: tmat3<T>, right: T) -> tmat3<T> {
 /// - parameter left: The left operand
 /// - parameter right: The right operand
 /// - returns: The product of the matrix and scalar
-public func /<T: ArithmeticType> (left: tmat3<T>, right: T) -> tmat3<T> {
-    return tmat3<T>(
-        left.array[0] / right, left.array[1] / right, left.array[2] / right,
-        left.array[3] / right, left.array[4] / right, left.array[5] / right,
-        left.array[6] / right, left.array[7] / right, left.array[8] / right
-    )
+public func /<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: tmat3<T>, right: S) -> tmat3<T> {
+    let scalar : T = T(1) / T(right)
+    let a11 : T = left.array[0] * scalar
+    let a21 : T = left.array[1] * scalar
+    let a31 : T = left.array[2] * scalar
+    let a12 : T = left.array[3] * scalar
+    let a22 : T = left.array[4] * scalar
+    let a32 : T = left.array[5] * scalar
+    let a13 : T = left.array[6] * scalar
+    let a23 : T = left.array[7] * scalar
+    let a33 : T = left.array[8] * scalar
+    return tmat3<T>(a11, a12, a13, a21, a22, a23, a31, a32, a33)
 }
 
 
 /// Compund operator for addition
 /// - parameter left: The left operand
 /// - parameter rught: The right operand
-public func +=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
+public func +=<T: ArithmeticScalarType> (left: inout tmat3<T>, right: tmat3<T>) {
     left = left + right
 }
 
@@ -409,7 +453,7 @@ public func +=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
 /// Compund operator for addition
 /// - parameter left: The left operand
 /// - parameter right: The right operand
-public func -=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
+public func -=<T: ArithmeticScalarType> (left: inout tmat3<T>, right: tmat3<T>) {
     left = left - right
 }
 
@@ -417,7 +461,7 @@ public func -=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
 /// Compund operator for addition
 /// - parameter left: The left operand
 /// - parameter right: The right operand
-public func *=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
+public func *=<T: ArithmeticScalarType> (left: inout tmat3<T>, right: tmat3<T>) {
     left = left * right
 }
 
@@ -425,21 +469,21 @@ public func *=<T: ArithmeticType> (left: inout tmat3<T>, right: tmat3<T>) {
 /// Compund operator for addition
 /// - parameter left: The left operand
 /// - parameter right: The right operand
-public func *=<T: ArithmeticType> (left: inout tmat3<T>, right: T) {
-    left = left * right
+public func *=<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: inout tmat3<T>, right: S) {
+    left = left * T(right)
 }
 
 
 /// Compund operator for addition
 /// - parameter left: The left operand
 /// - parameter right: The right operand
-public func /=<T: ArithmeticType> (left: inout tmat3<T>, right: T) {
+public func /=<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: inout tmat3<T>, right: S) {
     left = left / right
 }
 
 
 /// Compares to matrices
-public func ==<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> Bool {
+public func ==<T: ArithmeticScalarType> (left: tmat3<T>, right: tmat3<T>) -> Bool {
     for i in 0..<left.array.count {
         if left.array[i] != right.array[i] {
             return false
@@ -459,7 +503,7 @@ public func ==<T: ArithmeticType> (left: tmat3<T>, right: tmat3<T>) -> Bool {
 /// Transposes the matrix
 /// - parameter mat: The matrix to transpose
 /// - returns: The transposed matrix
-public func transpose<T: ArithmeticType> (_ mat: tmat3<T>) -> tmat3<T> {
+public func transpose<T: ArithmeticScalarType> (_ mat: tmat3<T>) -> tmat3<T> {
     return tmat3<T>(
         mat.array[0], mat.array[3], mat.array[6],
         mat.array[1], mat.array[4], mat.array[7],
@@ -471,25 +515,54 @@ public func transpose<T: ArithmeticType> (_ mat: tmat3<T>) -> tmat3<T> {
 /// Inverts a 3x3 matrix
 /// - parameter mat: The matrix to invert
 /// - returns: The inverse matrix
-public func invert<T: ArithmeticType> (_ mat: tmat3<T>) throws -> tmat3<T> {
+public func invert<T: ArithmeticScalarType> (_ mat: tmat3<T>) throws -> tmat3<T> {
     let det : T = mat.det
+    
     guard det != 0 else {
         throw MatrixError.NonRegular
     }
     
-    let a11 : T = (mat.array[4] * mat.array[8] - mat.array[7] * mat.array[5])
-    let a21 : T = (mat.array[7] * mat.array[2] - mat.array[1] * mat.array[8])
-    let a31 : T = (mat.array[1] * mat.array[5] - mat.array[4] * mat.array[2])
+    let d : T = 1 / det
     
-    let a12 : T = (mat.array[6] * mat.array[5] - mat.array[3] * mat.array[8])
-    let a22 : T = (mat.array[0] * mat.array[8] - mat.array[6] * mat.array[2])
-    let a32 : T = (mat.array[3] * mat.array[2] - mat.array[0] * mat.array[5])
+    var a : T = mat.array[4] * mat.array[8]
+    var b : T = mat.array[7] * mat.array[5]
+    let a11 : T = (a - b) * d
     
-    let a13 : T = (mat.array[3] * mat.array[7] - mat.array[6] * mat.array[4])
-    let a23 : T = (mat.array[6] * mat.array[1] - mat.array[0] * mat.array[7])
-    let a33 : T = (mat.array[0] * mat.array[4] - mat.array[3] * mat.array[1])
+    a = mat.array[7] * mat.array[2]
+    b = mat.array[1] * mat.array[8]
+    let a21 : T = (a - b) * d
+    
+    a = mat.array[1] * mat.array[5]
+    b = mat.array[4] * mat.array[2]
+    let a31 : T = (a - b) * d
+    
+    a = mat.array[6] * mat.array[5]
+    b = mat.array[3] * mat.array[8]
+    let a12 : T = (a - b) * d
+    
+    a = mat.array[0] * mat.array[8]
+    b = mat.array[6] * mat.array[2]
+    let a22 : T = (a - b) * d
+    
+    
+    a = mat.array[3] * mat.array[2]
+    b = mat.array[0] * mat.array[5]
+    let a32 : T = (a - b) * d
+    
+    a = mat.array[3] * mat.array[7]
+    b = mat.array[6] * mat.array[4]
+    let a13 : T = (a - b) * d
+    
+    a = mat.array[6] * mat.array[1]
+    b = mat.array[0] * mat.array[7]
+    let a23 : T = (a - b) * d
+    
+    
+    a = mat.array[0] * mat.array[4]
+    b = mat.array[3] * mat.array[1]
+    let a33 : T = (a - b) * d
 
-    return tmat3<T>(a11, a21, a31, a12, a22, a32, a13, a23, a33) / det
+    return tmat3<T>(a11, a21, a31, a12, a22, a32, a13, a23, a33)
 }
 
 
@@ -503,19 +576,45 @@ public func invert (_ mat: mat3i) throws -> mat3f {
         throw MatrixError.NonRegular
     }
     
-    let idet : Float = 1.0 / Float(det)
+    let d : Float = 1.0 / Float(det)
     
-    let a11 : Float = Float(mat.array[4] * mat.array[8] - mat.array[7] * mat.array[5])
-    let a21 : Float = Float(mat.array[7] * mat.array[2] - mat.array[1] * mat.array[8])
-    let a31 : Float = Float(mat.array[1] * mat.array[5] - mat.array[4] * mat.array[2])
+    var a : Float = Float(mat.array[4] * mat.array[8])
+    var b : Float = Float(mat.array[7] * mat.array[5])
+    let a11 : Float = (a - b) * d
     
-    let a12 : Float = Float(mat.array[6] * mat.array[5] - mat.array[3] * mat.array[8])
-    let a22 : Float = Float(mat.array[0] * mat.array[8] - mat.array[6] * mat.array[2])
-    let a32 : Float = Float(mat.array[3] * mat.array[2] - mat.array[0] * mat.array[5])
+    a = Float(mat.array[7] * mat.array[2])
+    b = Float(mat.array[1] * mat.array[8])
+    let a21 : Float = (a - b) * d
     
-    let a13 : Float = Float(mat.array[3] * mat.array[7] - mat.array[6] * mat.array[4])
-    let a23 : Float = Float(mat.array[6] * mat.array[1] - mat.array[0] * mat.array[7])
-    let a33 : Float = Float(mat.array[0] * mat.array[4] - mat.array[3] * mat.array[1])
+    a = Float(mat.array[1] * mat.array[5])
+    b = Float(mat.array[4] * mat.array[2])
+    let a31 : Float = (a - b) * d
     
-    return tmat3<Float>(a11, a21, a31, a12, a22, a32, a13, a23, a33) * idet
+    a = Float(mat.array[6] * mat.array[5])
+    b = Float(mat.array[3] * mat.array[8])
+    let a12 : Float = (a - b) * d
+    
+    a = Float(mat.array[0] * mat.array[8])
+    b = Float(mat.array[6] * mat.array[2])
+    let a22 : Float = (a - b) * d
+    
+    
+    a = Float(mat.array[3] * mat.array[2])
+    b = Float(mat.array[0] * mat.array[5])
+    let a32 : Float = (a - b) * d
+    
+    a = Float(mat.array[3] * mat.array[7])
+    b = Float(mat.array[6] * mat.array[4])
+    let a13 : Float = (a - b) * d
+    
+    a = Float(mat.array[6] * mat.array[1])
+    b = Float(mat.array[0] * mat.array[7])
+    let a23 : Float = (a - b) * d
+    
+    
+    a = Float(mat.array[0] * mat.array[4])
+    b = Float(mat.array[3] * mat.array[1])
+    let a33 : Float = (a - b) * d
+    
+    return tmat3<Float>(a11, a21, a31, a12, a22, a32, a13, a23, a33)
 }

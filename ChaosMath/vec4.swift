@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct tvec4<T: ArithmeticType> : VectorType {
+public struct tvec4<T: ArithmeticScalarType> : VectorType {
 
     /// Describes the type of the elements
     public typealias ElementType = T
@@ -24,27 +24,27 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     
     /// Provides the dimension of this vector struct
     public static var dim : Int {
-        get {return 4}
+        return 4
     }
     
     /// Provides the first vector of the standard base
     public static var e1 : SelfType {
-        get {return SelfType(1, 0, 0, 0)}
+        return SelfType(1, 0, 0, 0)
     }
     
     /// Provides the second vector of the standard base
     public static var e2 : SelfType {
-        get {return SelfType(0, 1, 0, 0)}
+        return SelfType(0, 1, 0, 0)
     }
     
     /// Provides the second vector of the standard base
     public static var e3 : SelfType {
-        get {return SelfType(0, 0, 1, 0)}
+        return SelfType(0, 0, 1, 0)
     }
     
     /// Provides the second vector of the standard base
     public static var e4 : SelfType {
-        get {return SelfType(0, 0, 0, 1)}
+        return SelfType(0, 0, 0, 1)
     }
     
     /// Provides the identity matrix
@@ -80,7 +80,7 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     
     /// Returns the vector as array
     public var array : Array<ElementType> {
-        get {return [x, y, z, w]}
+        return [x, y, z, w]
     }
     
     
@@ -89,22 +89,26 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     | Initializers
     +--------------------------------------------------------------------------
     */
+
     
     /// Initializes the vector
     /// - parameter x: The x component of the vector
     /// - parameter y: The y component of the vector
-    public init (_ x: ElementType, _ y: ElementType, _ z: ElementType, _ w: ElementType) {
-        self.x = x;
-        self.y = y;
-        self.z = z;
-        self.w = w;
+    public init<ForeignType: ArithmeticScalarType> (_ x: ForeignType = 0, _ y: ForeignType = 0, _ z: ForeignType = 0, _ w: ForeignType = 0) {
+        self.x = ElementType(x);
+        self.y = ElementType(y);
+        self.z = ElementType(z);
+        self.w = ElementType(w);
     }
     
     
     /// Initializes the vector with an other
     /// - parameters vec: The vector to copy
-    public init (_ vec: SelfType) {
-        self.init(vec.x, vec.y, vec.z, vec.w);
+    public init<ForeignType: ArithmeticScalarType> (_ vec: tvec4<ForeignType>) {
+        self.x = ElementType(vec.x);
+        self.y = ElementType(vec.y);
+        self.z = ElementType(vec.z);
+        self.w = ElementType(vec.w);
     }
     
     
@@ -112,7 +116,7 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     /// - parameter vec: The vector containing the values for x and y
     /// - parameter z: The scalar containing the value for the z component
     /// - parameter w: The scalar containing the value for the w component
-    public init (_ vec: tvec2<ElementType>, _ z: ElementType, _ w: ElementType) {
+    public init (_ vec: tvec2<ElementType>, _ z: ElementType = 0, _ w: ElementType = 0) {
         self.init(vec.x, vec.y, z, w);
     }
     
@@ -121,7 +125,7 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     /// - parameter x: The scalar containing the value for the x component
     /// - parameter vec: The vector containing the values for y and z
     /// - parameter w: The scalar containing the value for the w component
-    public init (_ x: ElementType, _ vec: tvec2<ElementType>, _ w: ElementType) {
+    public init (_ x: ElementType, _ vec: tvec2<ElementType>, _ w: ElementType = 0) {
         self.init(x, vec.x, vec.y, w);
     }
     
@@ -138,7 +142,7 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     /// Initializes the vector with a vec3 and a valu for the w component
     /// - parameter vec: The vector containing the x, y and z component
     /// - parameter w: A value conatining the w component
-    public init (_ vec: tvec3<ElementType>, _ w: ElementType) {
+    public init (_ vec: tvec3<ElementType>, _ w: ElementType = 0) {
         self.init(vec.x, vec.y, vec.z, w)
     }
     
@@ -151,39 +155,23 @@ public struct tvec4<T: ArithmeticType> : VectorType {
     }
     
     
-    /// Initializes the vector by setting all components to given value
-    /// - parameter value: The value to set
-    public init (_ value: ElementType) {
-        self.init(value, value, value, value);
-    }
-    
-    
     /// Implementation of the ExpressibleByIntegerLiteral protocol
     /// - parameter value
     public init(integerLiteral value: Int) {
-        self.init(ElementType(value), ElementType(value), ElementType(value), ElementType(value))
-    }
-    
-    
-    /// Initializes the vector to null vector
-    public init () {
-        self.init(0, 0, 0, 0);
+        let val : ElementType = ElementType(value)
+        self.x = val
+        self.y = val
+        self.z = val
+        self.w = val
     }
     
     
     /// Initializes the vector with an array
-    public init(arrayLiteral elements: ElementType...) {
+    public init (arrayLiteral elements: ElementType...) {
         if (elements.count > 0) {x = elements[0]};
         if (elements.count > 1) {y = elements[1]};
         if (elements.count > 2) {z = elements[2]};
         if (elements.count > 3) {z = elements[3]};
-    }
-}
-
-
-extension tvec4 where T: ArithmeticFloatType {
-    public init <S: ArithmeticIntType> (_ vec: tvec4<S>) {
-        self.init(T(vec.x), T(vec.y), T(vec.z), T(vec.w))
     }
 }
 
@@ -203,7 +191,7 @@ public typealias vec4 = vec4f
 /// Negates the vector
 /// - parameter value: The vector to be negated
 /// - returns: The negated vector
-public prefix func -<T: ArithmeticType> (value: tvec4<T>) -> tvec4<T> {
+public prefix func -<T: ArithmeticScalarType> (value: tvec4<T>) -> tvec4<T> {
     return tvec4<T>(-value.x, -value.y, -value.z, -value.w)
 }
 
@@ -211,8 +199,12 @@ public prefix func -<T: ArithmeticType> (value: tvec4<T>) -> tvec4<T> {
 /// - parameter left: Left operand
 /// - parameter right: Right operand
 /// - returns: The sum of both operands
-public func +<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
-    return tvec4<T>(left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w);
+public func +<T: ArithmeticScalarType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
+    let x : T = left.x + right.x
+    let y : T = left.y + right.y
+    let z : T = left.z + right.z
+    let w : T = left.w + right.w
+    return tvec4<T>(x, y, z, w);
 }
 
 
@@ -220,7 +212,7 @@ public func +<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
 /// - parameter left: Left operand
 /// - parameter right: Right operand
 /// - returns: The difference of both operands
-public func -<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
+public func -<T: ArithmeticScalarType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
     return left + (-right);
 }
 
@@ -229,15 +221,15 @@ public func -<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
 /// - parameter left: Left operand
 /// - parameter right: Right operand
 /// - returns: The difference of both operands
-public func *<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
+public func *<T: ArithmeticScalarType> (left: tvec4<T>, right: tvec4<T>) -> tvec4<T> {
     return tvec4<T>(left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w);
 }
 
 
 /// Multiplies a scalar with a vector
 /// - parameter left: The scalar
-public func *<T: ArithmeticType> (left: T, right: tvec4<T>) -> tvec4<T> {
-    return tvec4<T>(left * right.x, left * right.y, left * right.z, left * right.w);
+public func *<S: ArithmeticScalarType, T: ArithmeticScalarType> (left: S, right: tvec4<T>) -> tvec4<T> {
+    return tvec4<T>(T(left) * right.x, T(left) * right.y, T(left) * right.z, T(left) * right.w);
 }
 
 
@@ -245,8 +237,8 @@ public func *<T: ArithmeticType> (left: T, right: tvec4<T>) -> tvec4<T> {
 /// - parameter left: The vector to multiply
 /// - parameter right: The multiplicator
 /// - returns: The vector multiplied with the scalar
-public func *<T: ArithmeticType> (left: tvec4<T>, right: T) -> tvec4<T> {
-    return right * left;
+public func *<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: tvec4<T>, right: S) -> tvec4<T> {
+    return tvec4<T>(left.x * T(right), left.y * T(right), left.z * T(right), left.w * T(right))
 }
 
 
@@ -254,15 +246,15 @@ public func *<T: ArithmeticType> (left: tvec4<T>, right: T) -> tvec4<T> {
 /// - parameter left: The vector to devide
 /// - parameter right: The denominator
 /// - returns: The vector devided by the scalar
-public func /<T: ArithmeticType> (left: tvec4<T>, right: T) -> tvec4<T> {
-    return tvec4<T>(left.x / right, left.y / right, left.z / right, left.w / right)
+public func /<T: ArithmeticScalarType, S: ArithmeticScalarType> (left: tvec4<T>, right: S) -> tvec4<T> {
+    return tvec4<T>(left.x / T(right), left.y / T(right), left.z / T(right), left.w / T(right))
 }
 
 
 /// Compound division operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func +=<T: ArithmeticType> (left: inout tvec4<T>, right: tvec4<T>) {
+public func +=<T: ArithmeticScalarType> (left: inout tvec4<T>, right: tvec4<T>) {
     left = left + right
 }
 
@@ -271,7 +263,7 @@ public func +=<T: ArithmeticType> (left: inout tvec4<T>, right: tvec4<T>) {
 /// Compound division operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func -=<T: ArithmeticType> (left: inout tvec4<T>, right: tvec4<T>) {
+public func -=<T: ArithmeticScalarType> (left: inout tvec4<T>, right: tvec4<T>) {
     left = left - right
 }
 
@@ -279,7 +271,7 @@ public func -=<T: ArithmeticType> (left: inout tvec4<T>, right: tvec4<T>) {
 /// Compound division operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func *=<T: ArithmeticType> (left: inout tvec4<T>, right: tvec4<T>) {
+public func *=<T: ArithmeticScalarType> (left: inout tvec4<T>, right: tvec4<T>) {
     left = left * right
 }
 
@@ -287,7 +279,7 @@ public func *=<T: ArithmeticType> (left: inout tvec4<T>, right: tvec4<T>) {
 /// Compound division operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func *=<T: ArithmeticType> (left: inout tvec4<T>, right: T) {
+public func *=<T: ArithmeticScalarType> (left: inout tvec4<T>, right: T) {
     left = left * right
 }
 
@@ -295,7 +287,7 @@ public func *=<T: ArithmeticType> (left: inout tvec4<T>, right: T) {
 /// Compound division operator
 /// - parameter left: The left side of the operation
 /// - parameter right: The right side of the operation
-public func /=<T: ArithmeticType> (left: inout tvec4<T>, right: T) {
+public func /=<T: ArithmeticScalarType> (left: inout tvec4<T>, right: T) {
     left = left / right
 }
 
@@ -304,7 +296,7 @@ public func /=<T: ArithmeticType> (left: inout tvec4<T>, right: T) {
 /// - parameter left: The left side operator
 /// - parameter right: The right side operator
 /// - returns: True when left and right have component wise equal values
-public func ==<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> Bool {
+public func ==<T: ArithmeticScalarType> (left: tvec4<T>, right: tvec4<T>) -> Bool {
     return left.x == right.x && left.y == right.y && left.z == right.z && left.w == right.w;
 }
 
@@ -316,8 +308,12 @@ public func ==<T: ArithmeticType> (left: tvec4<T>, right: tvec4<T>) -> Bool {
  */  
 
 /// Returns the dot product of two vectors
-public func dot<T: ArithmeticType> (_ left: tvec4<T>, _ right: tvec4<T>) -> T {
-    return left.x * right.x + left.y * right.y + left.z * right.z + left.z * right.z;
+public func dot<T: ArithmeticScalarType> (_ left: tvec4<T>, _ right: tvec4<T>) -> T {
+    let a : T = left.x * right.x
+    let b : T = left.y * right.y
+    let c : T = left.z * right.z
+    let d : T = left.w * right.w
+    return a + b + c + d
 }
 
 
@@ -327,7 +323,7 @@ public func dot<T: ArithmeticType> (_ left: tvec4<T>, _ right: tvec4<T>) -> T {
 /// - parameter z
 /// - parameter w
 /// - return: The determinant
-public func determinant<T: ArithmeticType> (_ x: tvec4<T>, _ y: tvec4<T>, _ z: tvec4<T>, _ w: tvec4<T>) -> T {
+public func determinant<T: ArithmeticScalarType> (_ x: tvec4<T>, _ y: tvec4<T>, _ z: tvec4<T>, _ w: tvec4<T>) -> T {
     let ay0 : tvec3<T> = tvec3<T>(y.y, y.z, y.w)
     let az0 : tvec3<T> = tvec3<T>(z.y, z.z, z.w)
     let aw0 : tvec3<T> = tvec3<T>(w.y, w.z, w.w)
@@ -356,14 +352,14 @@ public func determinant<T: ArithmeticType> (_ x: tvec4<T>, _ y: tvec4<T>, _ z: t
 /// - parameter value: The vector to calculate the magnitude from
 /// - returns: The magnitude of the vector
 public func magnitude<T: ArithmeticIntType> (_ value: tvec4<T>) -> Float {
-    return dot(value, value).squareRoot();
+    return dot(value, value).sqrt();
 }
 
 /// Returns the magnitude of the vector
 /// - parameter value: The vector to calculate the magnitude from
 /// - returns: The magnitude of the vector
 public func magnitude<T: ArithmeticFloatType> (_ value: tvec4<T>) -> T {
-    return dot(value, value).squareRoot();
+    return dot(value, value).sqrt();
 }
 
 

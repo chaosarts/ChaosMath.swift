@@ -9,7 +9,7 @@
 import Foundation
 
 
-public protocol ArithmeticType : SignedNumber, ExpressibleByIntegerLiteral, Comparable, CustomStringConvertible
+public protocol ArithmeticType : Comparable, CustomStringConvertible
 {
 	static prefix func - (value: Self) -> Self;
 	static func + (left: Self, right: Self) -> Self
@@ -20,15 +20,12 @@ public protocol ArithmeticType : SignedNumber, ExpressibleByIntegerLiteral, Comp
     static func -= (left: inout Self, right: Self)
     static func *= (left: inout Self, right: Self)
     static func /= (left: inout Self, right: Self)
- 	
-    init<T: ArithmeticType> (_ value: T)
-    init(_ value: Int)
-    init(_ value: Int8)
-    init(_ value: Int16)
-    init(_ value: Int32)
-    init(_ value: Int64)
-    init(_ value: Float)
-    init(_ value: Double)
+}
+
+
+public protocol ArithmeticScalarType : ArithmeticType, SignedNumber, ExpressibleByIntegerLiteral {
+
+    init<T: ArithmeticScalarType> (_ value: T)
     
     func toInt () -> Int
     func toInt8 () -> Int8
@@ -40,8 +37,8 @@ public protocol ArithmeticType : SignedNumber, ExpressibleByIntegerLiteral, Comp
 }
 
 
-public protocol ArithmeticIntType : ArithmeticType {
-    func squareRoot () -> Float
+public protocol ArithmeticIntType : ArithmeticScalarType {
+    func sqrt () -> Float
     func sin () -> Float
     func asin () -> Float
     func cos() -> Float
@@ -51,7 +48,8 @@ public protocol ArithmeticIntType : ArithmeticType {
 }
 
 
-public protocol ArithmeticFloatType : BinaryFloatingPoint, ExpressibleByFloatLiteral, ArithmeticType {
+public protocol ArithmeticFloatType : ArithmeticScalarType, BinaryFloatingPoint, ExpressibleByFloatLiteral {
+    func sqrt () -> Self
     func sin () -> Self
     func asin () -> Self
     func cos() -> Self

@@ -10,7 +10,7 @@ import Foundation
 
 extension Int16 : ArithmeticIntType {
     
-    public init<T: ArithmeticType> (_ value: T) {
+    public init<T: ArithmeticScalarType> (_ value: T) {
         self.init(value.toInt16())
     }
     
@@ -50,7 +50,7 @@ extension Int16 : ArithmeticIntType {
     }
     
     
-    public func squareRoot () -> Float
+    public func sqrt () -> Float
     {
         return Darwin.sqrt(Float(self))
     }

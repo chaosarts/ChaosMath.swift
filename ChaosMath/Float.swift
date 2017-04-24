@@ -10,7 +10,7 @@ import Foundation
 
 extension Float : ArithmeticFloatType {
     
-    public init<T: ArithmeticType> (_ value: T) {
+    public init<T: ArithmeticScalarType> (_ value: T) {
         self.init(value.toFloat())
     }
     
@@ -48,6 +48,11 @@ extension Float : ArithmeticFloatType {
     
     public func toDouble() -> Double {
         return Double(self)
+    }
+    
+    
+    public func sqrt() -> Float {
+        return Darwin.sqrt(self)
     }
     
     
