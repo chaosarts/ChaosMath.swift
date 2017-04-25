@@ -230,7 +230,12 @@ public func +<T: ArithmeticScalarType> (left: tmat2<T>, right: tmat2<T>) -> tmat
 /// - parameter right: The right operand
 /// - returns: The difference of the matrices
 public func -<T: ArithmeticScalarType> (left: tmat2<T>, right: tmat2<T>) -> tmat2<T> {
-    return left - right
+    let a11 : T = left.array[0] - right.array[0]
+    let a21 : T = left.array[1] - right.array[1]
+    let a12 : T = left.array[2] - right.array[2]
+    let a22 : T = left.array[3] - right.array[3]
+    
+    return tmat2<T>(a11, a21, a12, a22)
 }
 
 

@@ -60,8 +60,23 @@ class ChaosVec2Test: XCTestCase {
         v2 /= 1.5
         XCTAssertEqual(vec2(3, 3), v2)
         
-        v2 += vec2(1, -1)
-        XCTAssertEqual(vec2(4, 2), v2)
+        v2 *= vec2(2, 4)
+        XCTAssertEqual(vec2(6, 12), v2)
+        
+        v2 += vec2(2, -4)
+        XCTAssertEqual(vec2(8, 8), v2)
+    }
+    
+    
+    func testFunctions () {
+        let v1 : vec2 = vec2(8, 7)
+        let v2 : vec2 = vec2(2, -6)
+        XCTAssertEqual(2 * 8 - 6 * 7, dot(v1, v2))
+        
+        let mag2 : Float = sqrt(4 + 36)
+        XCTAssertEqual(mag2, magnitude(v2))
+        XCTAssertEqual(vec2(2 / mag2, -6 / mag2), normalize(v2))
+        XCTAssertEqualWithAccuracy(rad(45), angle(vec2(1, 1), vec2.e1), accuracy: 0.005)
     }
     
     

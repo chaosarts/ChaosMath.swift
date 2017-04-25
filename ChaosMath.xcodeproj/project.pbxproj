@@ -36,6 +36,7 @@
 		C48C253D1DAD412800941123 /* Int64.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C253C1DAD412800941123 /* Int64.swift */; };
 		C48C253F1DAD41A800941123 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C253E1DAD41A800941123 /* Int.swift */; };
 		C4B8F83F1DABC2B600B678E8 /* quaternion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B8F83E1DABC2B600B678E8 /* quaternion.swift */; };
+		C4D887A21EAEC46400ECAA19 /* ChaosFuncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D887A11EAEC46400ECAA19 /* ChaosFuncTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		C48C253E1DAD41A800941123 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		C4B8F83E1DABC2B600B678E8 /* quaternion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = quaternion.swift; sourceTree = "<group>"; };
 		C4B8F8401DABC9DB00B678E8 /* ChaosCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ChaosCore.xcodeproj; path = ../ChaosCore/ChaosCore.xcodeproj; sourceTree = "<group>"; };
+		C4D887A11EAEC46400ECAA19 /* ChaosFuncTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChaosFuncTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				C462883C1DA7EE5400920666 /* Info.plist */,
+				C4D887A11EAEC46400ECAA19 /* ChaosFuncTest.swift */,
 				C462883A1DA7EE5400920666 /* ChaosVec2Test.swift */,
 				C4271F271DABA99900D7410C /* ChaosVec3Test.swift */,
 				C4271F291DABAD4C00D7410C /* ChaosVec4Test.swift */,
@@ -376,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4271F2C1DABADC500D7410C /* ChaosMat2Test.swift in Sources */,
+				C4D887A21EAEC46400ECAA19 /* ChaosFuncTest.swift in Sources */,
 				C462883B1DA7EE5400920666 /* ChaosVec2Test.swift in Sources */,
 				C4271F2A1DABAD4C00D7410C /* ChaosVec4Test.swift in Sources */,
 				C4271F281DABA99900D7410C /* ChaosVec3Test.swift in Sources */,
@@ -444,7 +448,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-function-bodies=100";
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -492,7 +496,7 @@
 				HEADERMAP_USES_VFS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-function-bodies=100";
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -516,6 +520,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-function-bodies=100";
 				PRODUCT_BUNDLE_IDENTIFIER = ca.ChaosMath;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
