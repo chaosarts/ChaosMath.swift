@@ -406,6 +406,23 @@ public func transpose<T: ArithmeticScalarType> (_ mat: tmat2<T>) -> tmat2<T> {
 	return tmat2<T>(mat.array[0], mat.array[2], mat.array[1], mat.array[3])
 }
 
+/// Inverts the given matrix
+/// - parameter mat: The matrix to invert
+/// - returns: The inverted matrix
+public func invert<T: ArithmeticIntType> (_ mat: tmat2<T>) throws -> tmat2<Float> {
+    guard mat.det != 0 else {
+        throw MatrixError.NonRegular
+    }
+    
+    let coef : Float = 1.0 / mat.det.toFloat()
+    let a11 : Float = coef * mat.array[3].toFloat()
+    let a21 : Float = -coef * mat.array[1].toFloat()
+    let a12 : Float = -coef * mat.array[2].toFloat()
+    let a22 : Float = coef * mat.array[0].toFloat()
+    
+    return tmat2<Float>(a11, a21, a12, a22)
+}
+
 
 /// Inverts the given matrix
 /// - parameter mat: The matrix to invert
@@ -422,21 +439,4 @@ public func invert<T: ArithmeticFloatType> (_ mat: tmat2<T>) throws -> tmat2<T> 
     let a22 : T = coef * mat.array[0]
     
     return tmat2<T>(a11, a21, a12, a22)
-}
-
-/// Inverts the given matrix
-/// - parameter mat: The matrix to invert
-/// - returns: The inverted matrix
-public func invert<T: ArithmeticIntType> (_ mat: tmat2<T>) throws -> tmat2<Float> {
-    guard mat.det != 0 else {
-        throw MatrixError.NonRegular
-    }
-    
-    let coef : Float = 1.0 / mat.det.toFloat()
-    let a11 : Float = coef * mat.array[3].toFloat()
-    let a21 : Float = -coef * mat.array[1].toFloat()
-    let a12 : Float = -coef * mat.array[2].toFloat()
-    let a22 : Float = coef * mat.array[0].toFloat()
-    
-    return tmat2<Float>(a11, a21, a12, a22)
 }

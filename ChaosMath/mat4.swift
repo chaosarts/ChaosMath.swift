@@ -127,6 +127,28 @@ public struct tmat4<T: ArithmeticScalarType> : MatrixType {
     }
     
     
+    /// Initializes the a diagonal matrix
+    /// - parameter value: The value of the components with index i = j
+    public init<ForeignType: ArithmeticScalarType> (_ mat: tmat4<ForeignType>) {
+        array[0] = ElementType(mat.array[0])
+        array[1] = ElementType(mat.array[1])
+        array[2] = ElementType(mat.array[2])
+        array[3] = ElementType(mat.array[3])
+        array[4] = ElementType(mat.array[4])
+        array[5] = ElementType(mat.array[5])
+        array[6] = ElementType(mat.array[6])
+        array[7] = ElementType(mat.array[7])
+        array[8] = ElementType(mat.array[8])
+        array[0] = ElementType(mat.array[9])
+        array[10] = ElementType(mat.array[10])
+        array[11] = ElementType(mat.array[11])
+        array[12] = ElementType(mat.array[12])
+        array[13] = ElementType(mat.array[13])
+        array[14] = ElementType(mat.array[14])
+        array[15] = ElementType(mat.array[15])
+    }
+    
+    
     /// Initializes the matrix with an array
     /// - parameter array: The row-major array to copy
     public init<ForeignType: ArithmeticScalarType> (_ array: Array<ForeignType>) {
@@ -732,36 +754,36 @@ public func transpose<T: ArithmeticScalarType> (_ mat: tmat4<T>) -> tmat4<T> {
 /// - returns: The inverted matrix
 public func invert (_ mat: mat4f) throws -> mat4f {
 
-    let m00 : Float = mat.array[0]
-    let m10 : Float = mat.array[1]
-    let m20 : Float = mat.array[2]
-    let m30 : Float = mat.array[3]
-    let m01 : Float = mat.array[4]
-    let m11 : Float = mat.array[5]
-    let m21 : Float = mat.array[6]
-    let m31 : Float = mat.array[7]
-    let m02 : Float = mat.array[8]
-    let m12 : Float = mat.array[9]
-    let m22 : Float = mat.array[10]
-    let m32 : Float = mat.array[11]
-    let m03 : Float = mat.array[12]
-    let m13 : Float = mat.array[13]
-    let m23 : Float = mat.array[14]
-    let m33 : Float = mat.array[15]
+    let m11 : Float = mat.array[0]
+    let m21 : Float = mat.array[1]
+    let m31 : Float = mat.array[2]
+    let m41 : Float = mat.array[3]
+    let m12 : Float = mat.array[4]
+    let m22 : Float = mat.array[5]
+    let m32 : Float = mat.array[6]
+    let m42 : Float = mat.array[7]
+    let m13 : Float = mat.array[8]
+    let m23 : Float = mat.array[9]
+    let m33 : Float = mat.array[10]
+    let m43 : Float = mat.array[11]
+    let m14 : Float = mat.array[12]
+    let m24 : Float = mat.array[13]
+    let m34 : Float = mat.array[14]
+    let m44 : Float = mat.array[15]
 
-    let a0 : Float = m00 * m11 - m10 * m01
-    let a1 : Float = m00 * m21 - m20 * m01
-    let a2 : Float = m00 * m31 - m30 * m01
-    let a3 : Float = m10 * m21 - m20 * m11
-    let a4 : Float = m10 * m31 - m30 * m11
-    let a5 : Float = m20 * m31 - m30 * m21
+    let a0 : Float = m11 * m22 - m21 * m12
+    let a1 : Float = m11 * m32 - m31 * m12
+    let a2 : Float = m11 * m42 - m41 * m12
+    let a3 : Float = m21 * m32 - m31 * m22
+    let a4 : Float = m21 * m42 - m41 * m22
+    let a5 : Float = m31 * m42 - m41 * m32
 
-    let b0 : Float = m02 * m13 - m12 * m03
-    let b1 : Float = m02 * m23 - m22 * m03
-    let b2 : Float = m02 * m33 - m32 * m03
-    let b3 : Float = m12 * m23 - m22 * m13
-    let b4 : Float = m12 * m33 - m32 * m13
-    let b5 : Float = m22 * m33 - m32 * m23
+    let b0 : Float = m13 * m24 - m23 * m14
+    let b1 : Float = m13 * m34 - m33 * m14
+    let b2 : Float = m13 * m44 - m43 * m14
+    let b3 : Float = m23 * m34 - m33 * m24
+    let b4 : Float = m23 * m44 - m43 * m24
+    let b5 : Float = m33 * m44 - m43 * m34
 
 
     var tmpDet : Float = a0 * b5 - a1 * b4 + a2 * b3
@@ -774,84 +796,84 @@ public func invert (_ mat: mat4f) throws -> mat4f {
 
     let inverseDet : Float = 1 / tmpDet
 
-    var a : Float = m11 * b5
-    var b : Float = -m21 * b4
-    var c : Float = m31 * b3
+    var a : Float = m22 * b5
+    var b : Float = -m32 * b4
+    var c : Float = m42 * b3
     let a11 : Float = (a + b + c) * inverseDet;
 
-    a = -m10 * b5
-    b = m20 * b4
-    c = -m30 * b3
+    a = -m21 * b5
+    b = m31 * b4
+    c = -m41 * b3
     let a21 : Float = (a + b + c) * inverseDet;
 
-    a = m13 * a5
-    b = -m23 * a4
-    c = m33 * a3
+    a = m24 * a5
+    b = -m34 * a4
+    c = m44 * a3
     let a31 : Float = (a + b + c) * inverseDet;
 
-    a = -m12 * a5
-    b = m22 * a4
-    c = -m32 * a3
+    a = -m23 * a5
+    b = m33 * a4
+    c = -m43 * a3
     let a41 : Float = (a + b + c) * inverseDet;
 
-    a = -m01 * b5
-    b = m21 * b2
-    c = -m31 * b1
+    a = -m12 * b5
+    b = m32 * b2
+    c = -m42 * b1
     let a12 : Float = (a + b + c) * inverseDet;
 
-    a = m00 * b5
-    b = -m20 * b2
-    c = m30 * b1
+    a = m11 * b5
+    b = -m31 * b2
+    c = m41 * b1
     let a22 : Float = (a + b + c) * inverseDet;
 
-    a = -m03 * a5
-    b = m23 * a2
-    c = -m33 * a1
+    a = -m14 * a5
+    b = m34 * a2
+    c = -m44 * a1
     let a32 : Float = (a + b + c) * inverseDet;
 
-    a = m02 * a5
-    b = -m22 * a2
-    c = m32 * a1
+    a = m13 * a5
+    b = -m33 * a2
+    c = m43 * a1
     let a42 : Float = (a + b + c) * inverseDet;
 
-    a = m01 * b4
-    b = -m11 * b2
-    c = m31 * b0
+    a = m12 * b4
+    b = -m22 * b2
+    c = m42 * b0
     let a13 : Float = (a + b + c) * inverseDet;
 
-    a = -m00 * b4
-    b = m10 * b2
-    c = -m30 * b0
+    a = -m11 * b4
+    b = m21 * b2
+    c = -m41 * b0
     let a23 : Float = (a + b + c) * inverseDet;
 
-    a = m03 * a4
-    b = -m13 * a2
-    c = m33 * a0
+    a = m14 * a4
+    b = -m24 * a2
+    c = m44 * a0
     let a33 : Float = (a + b + c) * inverseDet;
 
-    a = -m02 * a4
-    b = m12 * a2
-    c = -m32 * a0
+    a = -m13 * a4
+    b = m23 * a2
+    c = -m43 * a0
     let a43 : Float = (a + b + c) * inverseDet;
 
-    a = -m01 * b3
-    b = m11 * b1
-    c = -m21 * b0
+    a = -m12 * b3
+    b = m22 * b1
+    c = -m32 * b0
     let a14 : Float = (a + b + c) * inverseDet;
 
-    a = m00 * b3
-    b = -m10 * b1
-    c = m20 * b0
+    a = m11 * b3
+    b = -m21 * b1
+    c = m31 * b0
     let a24 : Float = (a + b + c) * inverseDet;
 
-    a = -m03 * a3
-    b = m13 * a1
-    c = -m23 * a0
+    a = -m14 * a3
+    b = m24 * a1
+    c = -m34 * a0
     let a34 : Float = (a + b + c) * inverseDet;
 
-    a = m02 * a3
-    b = -m12 * a1
-    c = m22 * a0
+    a = m13 * a3
+    b = -m23 * a1
+    c = m33 * a0
     let a44 : Float = (a + b + c) * inverseDet;
 
     
@@ -864,36 +886,36 @@ public func invert (_ mat: mat4f) throws -> mat4f {
 /// - returns: The inverted matrix
 public func invert (_ mat: mat4d) throws -> mat4d {
 
-    let m00 : Double = mat.array[0]
-    let m10 : Double = mat.array[1]
-    let m20 : Double = mat.array[2]
-    let m30 : Double = mat.array[3]
-    let m01 : Double = mat.array[4]
-    let m11 : Double = mat.array[5]
-    let m21 : Double = mat.array[6]
-    let m31 : Double = mat.array[7]
-    let m02 : Double = mat.array[8]
-    let m12 : Double = mat.array[9]
-    let m22 : Double = mat.array[10]
-    let m32 : Double = mat.array[11]
-    let m03 : Double = mat.array[12]
-    let m13 : Double = mat.array[13]
-    let m23 : Double = mat.array[14]
-    let m33 : Double = mat.array[15]
+    let m11 : Double = mat.array[0]
+    let m21 : Double = mat.array[1]
+    let m31 : Double = mat.array[2]
+    let m41 : Double = mat.array[3]
+    let m12 : Double = mat.array[4]
+    let m22 : Double = mat.array[5]
+    let m32 : Double = mat.array[6]
+    let m42 : Double = mat.array[7]
+    let m13 : Double = mat.array[8]
+    let m23 : Double = mat.array[9]
+    let m33 : Double = mat.array[10]
+    let m43 : Double = mat.array[11]
+    let m14 : Double = mat.array[12]
+    let m24 : Double = mat.array[13]
+    let m34 : Double = mat.array[14]
+    let m44 : Double = mat.array[15]
 
-    let a0 : Double = m00 * m11 - m10 * m01
-    let a1 : Double = m00 * m21 - m20 * m01
-    let a2 : Double = m00 * m31 - m30 * m01
-    let a3 : Double = m10 * m21 - m20 * m11
-    let a4 : Double = m10 * m31 - m30 * m11
-    let a5 : Double = m20 * m31 - m30 * m21
+    let a0 : Double = m11 * m22 - m21 * m12
+    let a1 : Double = m11 * m32 - m31 * m12
+    let a2 : Double = m11 * m42 - m41 * m12
+    let a3 : Double = m21 * m32 - m31 * m22
+    let a4 : Double = m21 * m42 - m41 * m22
+    let a5 : Double = m31 * m42 - m41 * m32
 
-    let b0 : Double = m02 * m13 - m12 * m03
-    let b1 : Double = m02 * m23 - m22 * m03
-    let b2 : Double = m02 * m33 - m32 * m03
-    let b3 : Double = m12 * m23 - m22 * m13
-    let b4 : Double = m12 * m33 - m32 * m13
-	let b5 : Double = m22 * m33 - m32 * m23
+    let b0 : Double = m13 * m24 - m23 * m14
+    let b1 : Double = m13 * m34 - m33 * m14
+    let b2 : Double = m13 * m44 - m43 * m14
+    let b3 : Double = m23 * m34 - m33 * m24
+    let b4 : Double = m23 * m44 - m43 * m24
+	let b5 : Double = m33 * m44 - m43 * m34
 
 
     var tmpDet : Double = a0 * b5 - a1 * b4 + a2 * b3
@@ -906,84 +928,84 @@ public func invert (_ mat: mat4d) throws -> mat4d {
 
     let inverseDet : Double = 1 / tmpDet
 
-    var a : Double = m11 * b5
-    var b : Double = -m21 * b4
-    var c : Double = m31 * b3
+    var a : Double = m22 * b5
+    var b : Double = -m32 * b4
+    var c : Double = m42 * b3
     let a11 : Double = (a + b + c) * inverseDet;
 
-    a = -m10 * b5
-    b = m20 * b4
-    c = -m30 * b3
+    a = -m21 * b5
+    b = m31 * b4
+    c = -m41 * b3
     let a21 : Double = (a + b + c) * inverseDet;
 
-    a = m13 * a5
-    b = -m23 * a4
-    c = m33 * a3
+    a = m24 * a5
+    b = -m34 * a4
+    c = m44 * a3
     let a31 : Double = (a + b + c) * inverseDet;
 
-    a = -m12 * a5
-    b = m22 * a4
-    c = -m32 * a3
+    a = -m23 * a5
+    b = m33 * a4
+    c = -m43 * a3
     let a41 : Double = (a + b + c) * inverseDet;
 
-    a = -m01 * b5
-    b = m21 * b2
-    c = -m31 * b1
+    a = -m12 * b5
+    b = m32 * b2
+    c = -m42 * b1
     let a12 : Double = (a + b + c) * inverseDet;
 
-    a = m00 * b5
-    b = -m20 * b2
-    c = m30 * b1
+    a = m11 * b5
+    b = -m31 * b2
+    c = m41 * b1
     let a22 : Double = (a + b + c) * inverseDet;
 
-    a = -m03 * a5
-    b = m23 * a2
-    c = -m33 * a1
+    a = -m14 * a5
+    b = m34 * a2
+    c = -m44 * a1
     let a32 : Double = (a + b + c) * inverseDet;
 
-    a = m02 * a5
-    b = -m22 * a2
-    c = m32 * a1
+    a = m13 * a5
+    b = -m33 * a2
+    c = m43 * a1
     let a42 : Double = (a + b + c) * inverseDet;
 
-    a = m01 * b4
-    b = -m11 * b2
-    c = m31 * b0
+    a = m12 * b4
+    b = -m22 * b2
+    c = m42 * b0
     let a13 : Double = (a + b + c) * inverseDet;
 
-    a = -m00 * b4
-    b = m10 * b2
-    c = -m30 * b0
+    a = -m11 * b4
+    b = m21 * b2
+    c = -m41 * b0
     let a23 : Double = (a + b + c) * inverseDet;
 
-    a = m03 * a4
-    b = -m13 * a2
-    c = m33 * a0
+    a = m14 * a4
+    b = -m24 * a2
+    c = m44 * a0
     let a33 : Double = (a + b + c) * inverseDet;
 
-    a = -m02 * a4
-    b = m12 * a2
-    c = -m32 * a0
+    a = -m13 * a4
+    b = m23 * a2
+    c = -m43 * a0
     let a43 : Double = (a + b + c) * inverseDet;
 
-    a = -m01 * b3
-    b = m11 * b1
-    c = -m21 * b0
+    a = -m12 * b3
+    b = m22 * b1
+    c = -m32 * b0
     let a14 : Double = (a + b + c) * inverseDet;
 
-    a = m00 * b3
-    b = -m10 * b1
-    c = m20 * b0
+    a = m11 * b3
+    b = -m21 * b1
+    c = m31 * b0
     let a24 : Double = (a + b + c) * inverseDet;
 
-    a = -m03 * a3
-    b = m13 * a1
-    c = -m23 * a0
+    a = -m14 * a3
+    b = m24 * a1
+    c = -m34 * a0
     let a34 : Double = (a + b + c) * inverseDet;
 
-    a = m02 * a3
-    b = -m12 * a1
-    c = m22 * a0
+    a = m13 * a3
+    b = -m23 * a1
+    c = m33 * a0
     let a44 : Double = (a + b + c) * inverseDet;
 
     
@@ -996,58 +1018,58 @@ public func invert (_ mat: mat4d) throws -> mat4d {
 /// - returns: The inverted matrix
 public func invert<T: ArithmeticIntType> (_ mat: tmat4<T>) throws -> mat4f {
 
-    let m00 : Float = Float(mat.array[0])
-    let m10 : Float = Float(mat.array[1])
-    let m20 : Float = Float(mat.array[2])
-    let m30 : Float = Float(mat.array[3])
-    let m01 : Float = Float(mat.array[4])
-    let m11 : Float = Float(mat.array[5])
-    let m21 : Float = Float(mat.array[6])
-    let m31 : Float = Float(mat.array[7])
-    let m02 : Float = Float(mat.array[8])
-    let m12 : Float = Float(mat.array[9])
-    let m22 : Float = Float(mat.array[10])
-    let m32 : Float = Float(mat.array[11])
-    let m03 : Float = Float(mat.array[12])
-    let m13 : Float = Float(mat.array[13])
-    let m23 : Float = Float(mat.array[14])
-    let m33 : Float = Float(mat.array[15])
+    let m11 : Float = Float(mat.array[0])
+    let m21 : Float = Float(mat.array[1])
+    let m31 : Float = Float(mat.array[2])
+    let m41 : Float = Float(mat.array[3])
+    let m12 : Float = Float(mat.array[4])
+    let m22 : Float = Float(mat.array[5])
+    let m32 : Float = Float(mat.array[6])
+    let m42 : Float = Float(mat.array[7])
+    let m13 : Float = Float(mat.array[8])
+    let m23 : Float = Float(mat.array[9])
+    let m33 : Float = Float(mat.array[10])
+    let m43 : Float = Float(mat.array[11])
+    let m14 : Float = Float(mat.array[12])
+    let m24 : Float = Float(mat.array[13])
+    let m34 : Float = Float(mat.array[14])
+    let m44 : Float = Float(mat.array[15])
 
-    var a0 : Float = m00 * m11
-    a0 -= m10 * m01
+    var a0 : Float = m11 * m22
+    a0 -= m21 * m12
 
-    var a1 : Float = m00 * m21
-    a1 -= m20 * m01
+    var a1 : Float = m11 * m32
+    a1 -= m31 * m12
 
-    var a2 : Float = m00 * m31
-    a2 -= m30 * m01
+    var a2 : Float = m11 * m42
+    a2 -= m41 * m12
 
-    var a3 : Float = m10 * m21
-    a3 -= m20 * m11
+    var a3 : Float = m21 * m32
+    a3 -= m31 * m22
 
-    var a4 : Float = m10 * m31
-    a4 -= m30 * m11
+    var a4 : Float = m21 * m42
+    a4 -= m41 * m22
 
-    var a5 : Float = m20 * m31
-    a5 -= m30 * m21
+    var a5 : Float = m31 * m42
+    a5 -= m41 * m32
 
-    var b0 : Float = m02 * m13
-    b0 -= m12 * m03
+    var b0 : Float = m13 * m24
+    b0 -= m23 * m14
 
-    var b1 : Float = m02 * m23
-    b1 -= m22 * m03
+    var b1 : Float = m13 * m34
+    b1 -= m33 * m14
 
-    var b2 : Float = m02 * m33
-    b2 -= m32 * m03
+    var b2 : Float = m13 * m44
+    b2 -= m43 * m14
 
-    var b3 : Float = m12 * m23
-    b3 -= m22 * m13
+    var b3 : Float = m23 * m34
+    b3 -= m33 * m24
 
-    var b4 : Float = m12 * m33
-    b4 -= m32 * m13
+    var b4 : Float = m23 * m44
+    b4 -= m43 * m24
 
-    var b5 : Float = m22 * m33
-    b5 -= m32 * m23
+    var b5 : Float = m33 * m44
+    b5 -= m43 * m34
 
 
     var tmpDet : Float = a0 * b5 
@@ -1063,84 +1085,84 @@ public func invert<T: ArithmeticIntType> (_ mat: tmat4<T>) throws -> mat4f {
 
     let inverseDet : Float = 1 / tmpDet
 
-    var a11 : Float = m11 * b5
-    a11 -= m21 * b4 
-    a11 += m31 * b3
+    var a11 : Float = m22 * b5
+    a11 -= m32 * b4 
+    a11 += m42 * b3
     a11 *= inverseDet
 
-    var a21 : Float = -m10 * b5
-    a21 += m20 * b4 
-    a21 -= m30 * b3
+    var a21 : Float = -m21 * b5
+    a21 += m31 * b4 
+    a21 -= m41 * b3
     a21 *= inverseDet
 
-    var a31 : Float = m13 * a5
-    a31 -= m23 * a4 
-    a31 += m33 * a3
+    var a31 : Float = m24 * a5
+    a31 -= m34 * a4 
+    a31 += m44 * a3
     a31 *= inverseDet
 
-    var a41 : Float = -m12 * a5
-    a41 += m22 * a4 
-    a41 -= m32 * a3
+    var a41 : Float = -m23 * a5
+    a41 += m33 * a4 
+    a41 -= m43 * a3
     a41 *= inverseDet
 
-    var a12 : Float = -m01 * b5
-    a12 += m21 * b2 
-    a12 -= m31 * b1
+    var a12 : Float = -m12 * b5
+    a12 += m32 * b2 
+    a12 -= m42 * b1
     a12 *= inverseDet
 
-    var a22 : Float = m00 * b5
-    a22 -= m20 * b2 
-    a22 += m30 * b1
+    var a22 : Float = m11 * b5
+    a22 -= m31 * b2 
+    a22 += m41 * b1
     a22 *= inverseDet
 
-    var a32 : Float = -m03 * a5
-    a32 += m23 * a2 
-    a32 -= m33 * a1
+    var a32 : Float = -m14 * a5
+    a32 += m34 * a2 
+    a32 -= m44 * a1
     a32 *= inverseDet
 
-    var a42 : Float = m02 * a5
-    a42 -= m22 * a2 
-    a42 += m32 * a1
+    var a42 : Float = m13 * a5
+    a42 -= m33 * a2 
+    a42 += m43 * a1
     a42 *= inverseDet
 
-    var a13 : Float = m01 * b4
-    a13 -= m11 * b2 
-    a13 += m31 * b0
+    var a13 : Float = m12 * b4
+    a13 -= m22 * b2 
+    a13 += m42 * b0
     a13 *= inverseDet
 
-    var a23 : Float = -m00 * b4
-    a23 += m10 * b2 
-    a23 -= m30 * b0
+    var a23 : Float = -m11 * b4
+    a23 += m21 * b2 
+    a23 -= m41 * b0
     a23 *= inverseDet
 
-    var a33 : Float = m03 * a4
-    a33 -= m13 * a2 
-    a33 += m33 * a0
+    var a33 : Float = m14 * a4
+    a33 -= m24 * a2 
+    a33 += m44 * a0
     a33 *= inverseDet
 
-    var a43 : Float = -m02 * a4
-    a43 += m12 * a2 
-    a43 -= m32 * a0
+    var a43 : Float = -m13 * a4
+    a43 += m23 * a2 
+    a43 -= m43 * a0
     a43 *= inverseDet
 
-    var a14 : Float = -m01 * b3
-    a14 += m11 * b1 
-    a14 -= m21 * b0
+    var a14 : Float = -m12 * b3
+    a14 += m22 * b1 
+    a14 -= m32 * b0
     a14 *= inverseDet
 
-    var a24 : Float = m00 * b3
-    a24 -= m10 * b1 
-    a24 += m20 * b0
+    var a24 : Float = m11 * b3
+    a24 -= m21 * b1 
+    a24 += m31 * b0
     a24 *= inverseDet
 
-    var a34 : Float = -m03 * a3
-    a34 += m13 * a1 
-    a34 -= m23 * a0
+    var a34 : Float = -m14 * a3
+    a34 += m24 * a1 
+    a34 -= m34 * a0
     a34 *= inverseDet
 
-    var a44 : Float = m02 * a3
-    a44 -= m12 * a1 
-    a44 += m22 * a0
+    var a44 : Float = m13 * a3
+    a44 -= m23 * a1 
+    a44 += m33 * a0
     a44 *= inverseDet
 
 

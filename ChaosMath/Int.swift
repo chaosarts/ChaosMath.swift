@@ -10,7 +10,7 @@ import Foundation
 
 extension Int : ArithmeticIntType {
     
-    public init<T: ArithmeticScalarType> (_ value: T) {
+    public init<T>(_ value: T) where T : ArithmeticScalarType {
         self.init(value.toInt())
     }
     

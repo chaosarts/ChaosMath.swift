@@ -135,13 +135,14 @@ public func ==<ElementType: ArithmeticScalarType> (left: tbasis2<ElementType>, r
  +------------------------------------------------------------------------------
  */
 
+
 /// Returns the transformation matrix from one basis to another
 /// - parameter from: The basis to transform from
 /// - parameter to: The basis to transform to
 /// - returns: The transformation matrix
-public func transformation<T: ArithmeticFloatType> (_ from: tbasis2<T>, _ to: tbasis2<T>) -> tmat2<T> {
-    let inverseTo : tmat2<T> = try! invert(to.mat)
-    return inverseTo * from.mat
+public func transformation<T: ArithmeticIntType> (fromBasis from: tbasis2<T>, toBasis to: tbasis2<T>) -> mat2f {
+    let invertedMat : mat2f = try! invert(to.mat)
+    return invertedMat * mat2f(from.mat)
 }
 
 
@@ -149,9 +150,60 @@ public func transformation<T: ArithmeticFloatType> (_ from: tbasis2<T>, _ to: tb
 /// - parameter from: The basis to transform from
 /// - parameter to: The basis to transform to
 /// - returns: The transformation matrix
-public func transformation<T: ArithmeticIntType> (_ from: tbasis2<T>, _ to: tbasis2<T>) -> mat2f {
-    let invertedMat : mat2f = try! invert(to.mat)
-    return invertedMat * mat2f(from.mat)
+public func transformation<T: ArithmeticFloatType> (fromBasis from: tbasis2<T>, toBasis to: tbasis2<T>) -> tmat2<T> {
+    let inverseTo : tmat2<T> = try! invert(to.mat)
+    return inverseTo * from.mat
+}
+
+
+/// Returns the orthognal version of given basis
+/// - parameter basis: The basis to orthogonalize
+/// - parameter normalize: Indicates, whether to normalize the basis or not
+public func gramschmidt<T: ArithmeticScalarType> (_ basis: tbasis2<T>, _ normalize: Bool = false) -> tbasis2<Float>? {
+    return gramschmidt(basis.b1, basis.b2)
+}
+
+
+/// Returns a orthogonal basis out of the given two vectors, if not collinear
+/// - parameter w1: The first vector
+/// - parameter w2: The second vector
+/// - parameter normalize: Indicates, whether to normalize the basis or not
+public func gramschmidt<T: ArithmeticScalarType> (_ w1: tvec2<T>, _ w2: tvec2<T>, _ normalize: Bool = false) -> tbasis2<Float>? {
+    if determinant(w1, w2) == 0 {
+        return nil
+    }
+    
+    var v1 : tvec2<Float> = tvec2<Float>(w1)
+    var v2 : tvec2<Float> = tvec2<Float>(w2)
+    v2 -= dot(v1, v2) / dot(v1, v1) * v1
+    
+    if normalize {
+        v1 = ChaosMath.normalize(v1)
+        v2 = ChaosMath.normalize(v2)
+    }
+    
+    return tbasis2<Float>(v1, v2)
+}
+
+
+/// Returns a orthogonal basis out of the given two vectors, if not collinear
+/// - parameter w1: The first vector
+/// - parameter w2: The second vector
+/// - parameter normalize: Indicates, whether to normalize the basis or not
+public func gramschmidt (_ w1: vec2d, _ w2: vec2d, _ normalize: Bool = false) -> basis2d? {
+    if determinant(w1, w2) == 0 {
+        return nil
+    }
+    
+    var v1 : vec2d = w1
+    var v2 : vec2d = w2 - dot(v1, w2) / dot(v1, v1) * v1
+    
+    if normalize {
+        v1 = ChaosMath.normalize(v1)
+        v2 = ChaosMath.normalize(v2)
+    }
+    
+    return basis2d(v1, v2)
 }
 
 

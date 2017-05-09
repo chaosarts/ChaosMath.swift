@@ -10,10 +10,9 @@ import Foundation
 
 extension Double : ArithmeticFloatType {
     
-    public init<T: ArithmeticScalarType> (_ value: T) {
+    public init<T: ArithmeticScalarType>(_ value: T) {
         self.init(value.toDouble())
     }
-    
     
     public func toInt () -> Int {
         return Int(self)

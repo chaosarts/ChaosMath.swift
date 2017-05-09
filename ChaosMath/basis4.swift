@@ -150,31 +150,30 @@ public func ==<ElementType: ArithmeticScalarType> (left: tbasis4<ElementType>, r
     return left.b1 == right.b1 && left.b2 == right.b2 && left.b3 == right.b3 && left.b4 == right.b4
 }
 
-///// Returns the transformation matrix from one basis to another
-///// - parameter from: The basis to transform from
-///// - parameter to: The basis to transform to
-///// - returns: The transformation matrix
-//public func transformation<T: ArithmeticFloatType> (_ from: tbasis4<T>, _ to: tbasis4<T>) -> tmat4<T> {
-//    do {
-//        let inverseTo : tmat4<T> = try invert(to.mat)
-//        return inverseTo * from.mat
-//    }
-//    catch {
-//        return tmat4<T>()
-//    }
-//}
-//
-//
-///// Returns the transformation matrix from one basis to another
-///// - parameter from: The basis to transform from
-///// - parameter to: The basis to transform to
-///// - returns: The transformation matrix
-//public func transformation<T: ArithmeticIntType> (_ from: tbasis4<T>, _ to: tbasis4<T>) -> tmat4<Float> {
-//    do {
-//        let inverseTo : tmat4<Float> = try invert(to.mat)
-//        return inverseTo * basis4f(from).mat
-//    }
-//    catch {
-//        return tmat4<Float>()
-//    }
-//}
+/// Returns the transformation matrix from one basis to another
+/// - parameter from: The basis to transform from
+/// - parameter to: The basis to transform to
+/// - returns: The transformation matrix
+public func transformation<T: ArithmeticIntType> (fromBasis from: tbasis4<T>, toBasis to: tbasis4<T>) -> tmat4<Float> {
+    let inverted : tmat4<Float> = try! invert(from.mat)
+    return inverted * tmat4<Float>(to.mat)
+}
+
+/// Returns the transformation matrix from one basis to another
+/// - parameter from: The basis to transform from
+/// - parameter to: The basis to transform to
+/// - returns: The transformation matrix
+public func transformation (fromBasis from: tbasis4<Float>, toBasis to: tbasis4<Float>) -> tmat4<Float> {
+    let inverted : tmat4<Float> = try! invert(from.mat)
+    return inverted * to.mat
+}
+
+
+/// Returns the transformation matrix from one basis to another
+/// - parameter from: The basis to transform from
+/// - parameter to: The basis to transform to
+/// - returns: The transformation matrix
+public func transformation (fromBasis from: tbasis4<Double>, toBasis to: tbasis4<Double>) -> tmat4<Double> {
+    let inverted : tmat4<Double> = try! invert(from.mat)
+    return inverted * to.mat
+}

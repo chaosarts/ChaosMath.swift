@@ -126,6 +126,21 @@ public struct tmat3<T: ArithmeticScalarType> : MatrixType {
     }
     
     
+    /// Copies a matrix with arithmetic scalar element type
+    /// -parameter mat: The matrix to copy
+    public init<ForeignType: ArithmeticScalarType> (_ mat: tmat3<ForeignType>) {
+        array[0] = ElementType(mat.array[0])
+        array[1] = ElementType(mat.array[1])
+        array[2] = ElementType(mat.array[2])
+        array[3] = ElementType(mat.array[3])
+        array[4] = ElementType(mat.array[4])
+        array[5] = ElementType(mat.array[5])
+        array[6] = ElementType(mat.array[6])
+        array[7] = ElementType(mat.array[7])
+        array[8] = ElementType(mat.array[8])
+    }
+    
+    
     /// Initializes the matrix with an array
     /// - parameter array: The row-major array to copy
     public init<ForeignType: ArithmeticScalarType> (_ array: Array<ForeignType>) {
@@ -515,7 +530,7 @@ public func transpose<T: ArithmeticScalarType> (_ mat: tmat3<T>) -> tmat3<T> {
 /// Inverts a 3x3 matrix
 /// - parameter mat: The matrix to invert
 /// - returns: The inverse matrix
-public func invert<T: ArithmeticScalarType> (_ mat: tmat3<T>) throws -> tmat3<T> {
+public func invert<T: ArithmeticFloatType> (_ mat: tmat3<T>) throws -> tmat3<T> {
     let det : T = mat.det
     
     guard det != 0 else {
@@ -569,8 +584,8 @@ public func invert<T: ArithmeticScalarType> (_ mat: tmat3<T>) throws -> tmat3<T>
 /// Inverts a 3x3 matrix
 /// - parameter mat: The matrix to invert
 /// - returns: The inverse matrix
-public func invert (_ mat: mat3i) throws -> mat3f {
-    let det : Int = mat.det
+public func invert<T: ArithmeticIntType> (_ mat: tmat3<T>) throws -> tmat3<Float> {
+    let det : T = mat.det
     
     guard det != 0 else {
         throw MatrixError.NonRegular

@@ -101,113 +101,117 @@ public typealias complex = complexf
   | Operators
   +--------------------------------------------------------------------------
   */
-
-extension tcomplex {
     
-    /// Negates the complex number
-    public static prefix func -(_ c: SelfType) -> SelfType {
-        return SelfType(-c.r, -c.i)
-    }
-    
-    /// Sum operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    /// - returns: The sum of two complex numbers
-    public static func + (left: SelfType, right: SelfType) -> SelfType {
-        return SelfType(left.r + right.r, left.i + right.i)
-    }
-    
-    
-    /// Substraction operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    /// - returns: The sum of two complex numbers
-    public static func - (left: SelfType, right: SelfType) -> SelfType {
-        return SelfType(left.r - right.r, left.i - right.i)
-    }
-    
-    
-    /// Substraction operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    /// - returns: The sum of two complex numbers
-    public static func * (left: SelfType, right: SelfType) -> SelfType {
-        let r_a : ElementType = left.r * right.r
-        let r_b : ElementType = left.i * right.i
-        let r : ElementType =  r_a - r_b
-        
-        let i_a : ElementType = left.r * right.i
-        let i_b : ElementType = left.i * right.r
-		let i : ElementType = i_a + i_b
-        
-        return SelfType(r, i)
-    }
-    
-    
-    /// Substraction operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    /// - returns: The sum of two complex numbers
-    public static func / (left: SelfType, right: SelfType) -> SelfType {
-        let one : ElementType = 1
-        
-        let frac_a : ElementType = right.r * right.r
-        let frac_b : ElementType = right.i * right.i
-        let frac : ElementType = one / (frac_a + frac_b)
-        
-        let real_a : ElementType = left.r * right.r
-        let real_b : ElementType = left.i * right.i
-        let real : ElementType = real_a + real_b
-        
-        let imaginary_a : ElementType = left.i * right.r
-        let imaginary_b : ElementType = left.r * right.i
-        let imaginary : ElementType = imaginary_a - imaginary_b
-        
-        return SelfType(real * frac, imaginary * frac)
-    }
-    
-    
-    /// Compund sum operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    public static func += (left: inout SelfType, right: SelfType) {
-        left = left + right
-    }
-    
-    
-    /// Compund diff operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    public static func -= (left: inout SelfType, right: SelfType) {
-        left = left - right
-    }
-    
-    
-    /// Compund multiplication operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    public static func *= (left: inout SelfType, right: SelfType) {
-        left = left * right
-    }
-    
-    
-    /// Compund division operator
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    public static func /= (left: inout SelfType, right: SelfType) {
-        left = left / right
-    }
-    
-    
-    /// Compares two complex numbers for equality
-    /// - parameter left: The left side of the operation
-    /// - parameter right: The left side of the operation
-    /// - returns: True, if the components are equal
-    public static func == (left: SelfType, right: SelfType) -> Bool {
-        return left.r == right.r && left.i == right.i
-    }
+/// Negates the complex number
+public prefix func -<T: ArithmeticScalarType>(_ c: tcomplex<T>) -> tcomplex<T> {
+    return tcomplex<T>(-c.r, -c.i)
 }
 
+/// Sum operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+/// - returns: The sum of two complex numbers
+public func + <T: ArithmeticScalarType>(left: tcomplex<T>, right: tcomplex<T>) -> tcomplex<T> {
+    return tcomplex<T>(left.r + right.r, left.i + right.i)
+}
+
+
+/// Substraction operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+/// - returns: The sum of two complex numbers
+public func - <T: ArithmeticScalarType>(left: tcomplex<T>, right: tcomplex<T>) -> tcomplex<T> {
+    return tcomplex<T>(left.r - right.r, left.i - right.i)
+}
+
+
+/// Substraction operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+/// - returns: The sum of two complex numbers
+public func * <T: ArithmeticScalarType>(left: tcomplex<T>, right: tcomplex<T>) -> tcomplex<T> {
+    let r_a : T = left.r * right.r
+    let r_b : T = left.i * right.i
+    let r : T =  r_a - r_b
+    
+    let i_a : T = left.r * right.i
+    let i_b : T = left.i * right.r
+	let i : T = i_a + i_b
+    
+    return tcomplex<T>(r, i)
+}
+
+
+/// Substraction operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+/// - returns: The sum of two complex numbers
+public func / <T: ArithmeticScalarType>(left: tcomplex<T>, right: tcomplex<T>) -> tcomplex<T> {
+    let one : T = 1
+    
+    let frac_a : T = right.r * right.r
+    let frac_b : T = right.i * right.i
+    let frac : T = one / (frac_a + frac_b)
+    
+    let real_a : T = left.r * right.r
+    let real_b : T = left.i * right.i
+    let real : T = real_a + real_b
+    
+    let imaginary_a : T = left.i * right.r
+    let imaginary_b : T = left.r * right.i
+    let imaginary : T = imaginary_a - imaginary_b
+    
+    return tcomplex<T>(real * frac, imaginary * frac)
+}
+
+
+/// Compund sum operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+public func +=<T: ArithmeticScalarType> (left: inout tcomplex<T>, right: tcomplex<T>) {
+    left = left + right
+}
+
+
+/// Compund diff operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+public func -=<T: ArithmeticScalarType> (left: inout tcomplex<T>, right: tcomplex<T>) {
+    left = left - right
+}
+
+
+/// Compund multiplication operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+public func *=<T: ArithmeticScalarType> (left: inout tcomplex<T>, right: tcomplex<T>) {
+    left = left * right
+}
+
+
+/// Compund division operator
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+public func /=<T: ArithmeticScalarType> (left: inout tcomplex<T>, right: tcomplex<T>) {
+    left = left / right
+}
+
+
+/// Compares two complex numbers for equality
+/// - parameter left: The left side of the operation
+/// - parameter right: The left side of the operation
+/// - returns: True, if the components are equal
+public func ==<T: ArithmeticScalarType> (left: tcomplex<T>, right: tcomplex<T>) -> Bool {
+    return left.r == right.r && left.i == right.i
+}
+
+
+
+/*
++--------------------------------------------------------------------------
+| Operators
++--------------------------------------------------------------------------
+*/
 
 /// Returns the conjugate of the complex number
 public func conjugate<T: ArithmeticScalarType> (_ c: tcomplex<T>) -> tcomplex<T> {

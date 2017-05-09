@@ -138,32 +138,20 @@ public func ==<ElementType: ArithmeticScalarType> (left: tbasis3<ElementType>, r
     return left.b1 == right.b1 && left.b2 == right.b2 && left.b3 == right.b3
 }
 
-///// Returns the transformation matrix from one basis to another
-///// - parameter from: The basis to transform from
-///// - parameter to: The basis to transform to
-///// - returns: The transformation matrix
-//public func transformation (_ from: basis3i, _ to: basis3i) -> mat3f {
-//    do {
-//        let invertedMat : mat3f = try invert(to.mat)
-//        let floatMat : mat3f = mat3f(
-//            Float(from.b1.b1), Float(from.b1.b2), Float(from.b1.b3),
-//            Float(from.b2.b1), Float(from.b2.b2), Float(from.b2.b3),
-//            Float(from.b3.b1), Float(from.b3.b2), Float(from.b3.b3)
-//        )
-//        return invertedMat * floatMat
-//    } catch {
-//        // Won't be reached anyway. Matrix of basis are ensured to be invertible
-//        return mat3f()
-//    }
-//}
-//
-//
-//public func transformation<T: ArithmeticScalarType> (_ from: tbasis3<T>, _ to: tbasis3<T>) -> tmat3<T> {
-//    do {
-//        let inverseTo : tmat3<T> = try invert(to.mat)
-//        return inverseTo * from.mat
-//    }
-//    catch {
-//        return tmat3<T>()
-//    }
-//}
+/// Returns the transformation matrix from one basis to another
+/// - parameter from: The basis to transform from
+/// - parameter to: The basis to transform to
+/// - returns: The transformation matrix
+public func transformation<T: ArithmeticIntType> (fromBasis from: tbasis3<T>, toBasis to: tbasis3<T>) -> tmat3<Float> {
+    let inverted : tmat3<Float> = try! invert(from.mat)
+    return inverted * tmat3<Float>(to.mat)
+}
+
+/// Returns the transformation matrix from one basis to another
+/// - parameter from: The basis to transform from
+/// - parameter to: The basis to transform to
+/// - returns: The transformation matrix
+public func transformation<T: ArithmeticFloatType> (fromBasis from: tbasis3<T>, toBasis to: tbasis3<T>) -> tmat3<T> {
+    let inverted : tmat3<T> = try! invert(from.mat)
+    return inverted * to.mat
+}
